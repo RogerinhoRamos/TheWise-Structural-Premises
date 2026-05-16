@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TheWise Structural Premises V1 - Manual</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --surface-color: rgba(30, 41, 59, 0.7);
+            --primary-color: #38bdf8;
+            --secondary-color: #10b981;
+            --danger-color: #f43f5e;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.15) 0px, transparent 50%);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        details {
+            background: var(--surface-color);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--glass-shadow);
+            transition: all 0.3s ease;
+        }
+
+        details[open] {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+        }
+
+        summary {
+            padding: 1.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--primary-color);
+            transition: background 0.3s ease;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        summary:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        summary i {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            width: 30px;
+            text-align: center;
+        }
+
+        summary .icon-group {
+            display: flex;
+            align-items: center;
+        }
+
+        summary .chevron {
+            color: var(--text-muted);
+            transition: transform 0.3s ease;
+        }
+
+        details[open] summary .chevron {
+            transform: rotate(180deg);
+            color: var(--primary-color);
+        }
+
+        .content {
+            padding: 0 1.5rem 1.5rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .content h3 {
+            color: var(--text-main);
+            margin: 1.5rem 0 0.5rem 0;
+            font-size: 1.1rem;
+        }
+
+        .content p {
+            margin-bottom: 1rem;
+        }
+
+        .content strong {
+            color: var(--primary-color);
+        }
+
+        /* Tabela Estilizada */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge.green { background: rgba(16, 185, 129, 0.2); color: var(--secondary-color); }
+        .badge.blue { background: rgba(56, 189, 248, 0.2); color: var(--primary-color); }
+        .badge.red { background: rgba(244, 63, 94, 0.2); color: var(--danger-color); }
+
+        .callout {
+            background: rgba(56, 189, 248, 0.1);
+            border-left: 4px solid var(--primary-color);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    
+        .param-group {
+            background: rgba(0, 0, 0, 0.15);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border-left: 3px solid var(--secondary-color);
+        }
+        .param-group h3 {
+            margin-top: 0;
+            color: var(--secondary-color);
+        }
+        .param-group ul {
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+        .param-group li {
+            margin-bottom: 0.5rem;
+        }
+        .param-group code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: monospace;
+            color: var(--primary-color);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>TheWise Structural Premises V1</h1>
+            <p>Manual Operacional e Inteligência de Mercado</p>
+        </header>
+
+        <div class="accordion">
+
+            <!-- SEÇÃO 1 -->
+            <details>
+                <summary>
+                    <div class="icon-group">
+                        <i class="fa-solid fa-brain"></i>
+                        1. A Lógica na Prática (O "Olho da Mosca")
+                    </div>
+                    <i class="fa-solid fa-chevron-down chevron"></i>
+                </summary>
+                <div class="content">
+                    <p>Muitos traders se perguntam ao utilizar o robô: <em>"Em qual tempo gráfico devo colocar? Por que ele comprou no topo em vez do fundo?"</em>. O TheWise TSP foi desenhado para simular a leitura humana discricionária de forma 100% matemática.</p>
+                    
+                    <h3><i class="fa-solid fa-chart-line"></i> O Timeframe do Gráfico vs O Cérebro do Robô</h3>
+                    <p>Você pode abrir o robô no gráfico de <strong>M1</strong> ou <strong>M3</strong>. Nossa arquitetura é blindada: não importa o gráfico visual, o "cérebro" consulta independentemente o Semanal, Diário, H2 e M10 no background. Usar gráficos menores permite que o robô leia os <em>ticks</em> mais rápido e reaja aos gatilhos instantaneamente.</p>
+
+                    <h3><i class="fa-solid fa-bullseye"></i> Simulando a Visão do Especialista (Setup Sniper)</h3>
+                    <p>Se você gosta de operar os gatilhos curtos (ex: a retração do 10 minutos com o gatilho no 1 minuto) para pegar o verdadeiro "olho da mosca", veja como configurar:</p>
+                    <ul>
+                        <li>Mude o <strong>Timeframe Estrutural</strong> nas configurações para <code>M10</code>.</li>
+                        <li>Mantenha o <strong>Timeframe de Confirmação</strong> no <code>M1</code> ou <code>M3</code>.</li>
+                        <li>Use o <strong>Modo 2 (Tend. + Pullback + Falha)</strong>.</li>
+                    </ul>
+                    
+                    <div class="callout">
+                        <strong>O que acontece na tela?</strong> A linha amarela e a caixa verde de Fibonacci vão se adaptar ao 10 minutos. O robô aguarda o preço retrair até a Zona Verde, e quando o gráfico de 1 minuto tentar cair, perder força e reverter (a famosa <em>falha micro</em>), ele entra no melhor ponto possível.
+                    </div>
+                </div>
+            </details>
+
+            
+            <!-- SEÇÃO GLOSSÁRIO -->
+            <details>
+                <summary>
+                    <div class="icon-group">
+                        <i class="fa-solid fa-book"></i>
+                        Glossário: Teste, Falha e Rompimento
+                    </div>
+                    <i class="fa-solid fa-chevron-down chevron"></i>
+                </summary>
+                <div class="content">
+                    <p>Para operar como um profissional, você deve entender o que o robô está "enxergando" matematicamente:</p>
+                    
+                    <div class="param-group">
+                        <h3><i class="fa-solid fa-magnifying-glass"></i> O Teste (Pullback)</h3>
+                        <p>É o momento em que o preço recua para testar a força da tendência anterior. No robô, isso é representado pelo toque no <strong>Retângulo Verde/Vermelho</strong>. É a busca pelo "desconto" para comprar barato.</p>
+                    </div>
+
+                    <div class="param-group">
+                        <h3><i class="fa-solid fa-triangle-exclamation"></i> A Falha (O Gatilho Sniper)</h3>
+                        <p>Acontece quando o preço testa a zona, tenta continuar caindo, mas perde força e o <strong>Timeframe de Confirmação (M1)</strong> vira para cima. É o sinal de que os vendedores desistiram e os compradores assumiram o controle no "olho da mosca".</p>
+                    </div>
+
+                    <div class="param-group">
+                        <h3><i class="fa-solid fa-arrow-trend-up"></i> O Rompimento (Nova Tendência)</h3>
+                        <p>Ocorre quando o preço ultrapassa a <strong>Linha Dourada (Topo/Fundo Estrutural)</strong>. Isso confirma que a tendência continua e o mercado vai buscar novos níveis. É o ponto onde o robô realiza lucro no modo Alvo Dinâmico ou entra no modo Tendência.</p>
+                    </div>
+                </div>
+            </details>
+
+            <!-- SEÇÃO 2 -->
+            <details>
+                <summary>
+                    <div class="icon-group">
+                        <i class="fa-solid fa-crosshairs"></i>
+                        2. Evitando Entradas no Topo
+                    </div>
+                    <i class="fa-solid fa-chevron-down chevron"></i>
+                </summary>
+                <div class="content">
+                    <p>Se o seu robô comprou exatamente na crista do pivô (no rompimento), é porque o seu Sinal de Entrada estava no <strong>Modo 0</strong>.</p>
+                    
+                    <div class="badge red">Modo 0: Tendência Estrutural</div>
+                    <p>Como ele pensa: <em>"O H2 fez topos e fundos ascendentes? É tendência! Compro a mercado agora mesmo!"</em>. Ele <strong>não espera recuo</strong>.</p>
+                    
+                    <div class="badge green">O Ajuste Ideal: Operando Pullback</div>
+                    <p>Para que o robô aguarde o preço cair até o "desconto" (Zona Verde de Fibonacci), você deve usar o <strong>Modo 1</strong> ou <strong>Modo 2</strong>. Assim, ele ignora o topo e atira apenas quando o preço pisa na retração.</p>
+                </div>
+            </details>
+
+            <!-- SEÇÃO 3 -->
+            <details>
+                <summary>
+                    <div class="icon-group">
+                        <i class="fa-solid fa-chess-knight"></i>
+                        3. Os 8 Modos Estruturais
+                    </div>
+                    <i class="fa-solid fa-chevron-down chevron"></i>
+                </summary>
+                <div class="content">
+                    <p>Você escolhe o quão "exigente" o robô deve ser. Abaixo estão os cenários:</p>
+                    
+                    <h3>Nível Básico (Foco no Estrutural)</h3>
+                    <table>
+                        <tr>
+                            <th>Modo</th>
+                            <th>Mecânica</th>
+                        </tr>
+                        <tr>
+                            <td><strong>0. Tendência</strong></td>
+                            <td>Entra no rompimento, assim que a estrutura é confirmada.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>1. Pullback</strong></td>
+                            <td>A tendência é de alta, mas espera o recuo para a Zona Fibo (50% a 100%).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2. Pullback + Falha</strong></td>
+                            <td>Além do recuo, espera o Timeframe Menor (M3/M1) confirmar que os vendedores falharam.</td>
+                        </tr>
+                    </table>
+
+                    <h3>Nível Avançado (Foco no Score)</h3>
+                    <p>O robô avalia o W1, D1, H2 e M10. Só entra se bater a Nota Mínima (ex: 7 pontos).</p>
+                    <table>
+                        <tr>
+                            <th>Modo</th>
+                            <th>Mecânica</th>
+                        </tr>
+                        <tr>
+                            <td><strong>3. Score Contextual</strong></td>
+                            <td>Bateu a nota, ele entra onde estiver.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>4. Score + Pullback</strong></td>
+                            <td>Nota mínima atingida + Preço na Zona Fibo.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>5. A Entrada Suprema</strong></td>
+                            <td>Nota 7 alcançada + Preço na Zona + Gráfico micro tentou ir contra e falhou.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>6. Score + ADX</strong></td>
+                            <td>Contexto nota 7, mas só passa se o ADX confirmar a força da tendência.</td>
+                        </tr>
+                    </table>
+
+                    <div class="param-group" style="border-left-color: var(--primary);">
+                        <h3><i class="fa-solid fa-display"></i> Identificação no Dashboard (Siglas)</h3>
+                        <p>Para facilitar a leitura rápida, o painel do robô exibe as seguintes siglas:</p>
+                        <ul>
+                            <li><code>TREND</code>: Modo 0 (Tendência Pura)</li>
+                            <li><code>PULLBACK</code>: Modo 1 (Retração Fibo)</li>
+                            <li><code>SNIPER</code>: Modo 2 (Retração + Falha Micro)</li>
+                            <li><code>SCORE</code>: Modo 3 (Contexto Nota Mínima)</li>
+                            <li><code>SC+PB</code>: Modo 4 (Nota + Retração)</li>
+                            <li><code>SUPREME</code>: Modo 5 (Nota + Retração + Falha)</li>
+                            <li><code>SC+ADX</code>: Modo 6 (Nota + Força de Tendência)</li>
+                        </ul>
+                    </div>
+                </div>
+            </details>
+
+            <!-- SEÇÃO 4 -->
+            <details>
+                <summary>
+                    <div class="icon-group">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        4. Saídas e Proteções
+                    </div>
+                    <i class="fa-solid fa-chevron-down chevron"></i>
+                </summary>
+                <div class="content">
+                    <p>Uma vez posicionado, o motor base (padrão base original) assume o controle da trincheira com seu gerenciamento pesado.</p>
+                    
+                    <h3><i class="fa-solid fa-rotate"></i> Saídas Estruturais</h3>
+                    <p>Não dependem de alvo fixo. Ex: Se a configuração for <strong>Inversão de Tendência</strong>, e o H2 virar para baixa enquanto você está comprado, o robô encerra o trade na hora assumindo lucro ou prejuízo, pois o contexto morreu.</p>
+
+                    <h3><i class="fa-solid fa-lock"></i> Alvos Fixos e Móveis</h3>
+                    <ul>
+                        <li><strong>Take Profit e Stop Loss:</strong> Definidos em pontos fixos.</li>
+                        <li><strong>Breakeven:</strong> Andou X pontos a favor? Puxa o Stop para o zero a zero.</li>
+                        <li><strong>Trailing Stop:</strong> O "Surf". Puxa o Stop degrau por degrau atrás do preço.</li>
+                        <li><strong>Saídas Parciais:</strong> Realiza lucro aos poucos no caminho até o alvo final.</li>
+                    </ul>
+                </div>
+            </details>
+
+
+            <!-- SEÇÃO 5 -->
+            <details>
+                <summary>
+                    <div class="icon-group">
+                        <i class="fa-solid fa-sliders"></i>
+                        5. Guia de Parametrização do Robô
+                    </div>
+                    <i class="fa-solid fa-chevron-down chevron"></i>
+                </summary>
+                <div class="content">
+                    <p>Entenda como configurar cada grupo de parâmetros dentro do MetaTrader para moldar o robô ao seu estilo de trade.</p>
+
+                    <div class="param-group">
+                        <h3><i class="fa-solid fa-bolt"></i> Bloco: Confirmação de Sinais</h3>
+                        <p><strong>Aplicação:</strong> Define o gatilho principal da inteligência estrutural.</p>
+                        <ul>
+                            <li><strong>Sinal entrada compra/venda:</strong> Escolha os Modos Estruturais (0 a 7). Ex: <em>Modo 2 (Tendência + Pullback + Falha)</em> para o setup Sniper.</li>
+                            <li><strong>Sinal saída compra/venda:</strong> Escolha o modo de saída do TSP:
+                                <ul>
+                                    <li><em>[TSP] Inversão Estrutural:</em> Modo "Botão de pânico". O robô só sai se a estrutura inteira de H2 reverter contra você.</li>
+                                    <li><em>[TSP] Desativado / Alvo Fixo:</em> Deixa a saída exclusivamente para o Takeprofit/Stoploss numérico do robô base.</li>
+                                    <li><em>[TSP] Alvo Dinâmico (Topo/Fundo):</em> Modo Sniper original. O robô coloca o alvo invisível na origem da retração e fecha o lucro automaticamente assim que testar o topo.</li>
+                                    <li><em>[TSP] Abortar Inversão Micro:</em> O robô foge imediatamente do trade se o 1 Minuto virar contra, poupando seu capital de um drawdown maior.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="param-group">
+                        <h3><i class="fa-solid fa-layer-group"></i> Bloco: [TSP] Timeframes Hierárquicos</h3>
+                        <p><strong>Aplicação:</strong> Onde você amarra os tempos gráficos para o cálculo da Tendência e dos Pivôs.</p>
+                        <ul>
+                            <li><strong>Timeframe Estrutural:</strong> O mais importante. Onde o robô traça os pivôs amarelos e a zona verde. Ex: <code>H2</code> para trades mais longos ou <code>M10</code> para simular a visão de scalper mais agressivo.</li>
+                            <li><strong>Timeframe de Confirmação:</strong> O "Olho da Mosca". Geralmente <code>M1</code> ou <code>M3</code>. Serve para validar falhas micro a favor da estrutura maior.</li>
+                        </ul>
+                    </div>
+
+                    <div class="param-group">
+                        <h3><i class="fa-solid fa-ruler-combined"></i> Bloco: [TSP] Pullback / Zonas</h3>
+                        <p><strong>Aplicação:</strong> Calibração da área de desconto (A Zona Verde no gráfico).</p>
+                        <ul>
+                            <li><strong>Fibo Superior (Ex: 50%):</strong> O limite mais raso do recuo. O robô passa a considerar compra a partir daqui.</li>
+                            <li><strong>Fibo Inferior (Ex: 100%):</strong> O limite máximo da retração. Abaixo disso, o movimento pode estar sendo revertido de vez.</li>
+                            <li><strong>Tolerância da Zona (Pontos):</strong> Ex: <code>50</code> pontos. Permite que o robô compre se o preço chegar muito perto da linha da fibo (front-running).</li>
+                        </ul>
+                    </div>
+
+                    <div class="param-group">
+                        <h3><i class="fa-solid fa-star"></i> Bloco: [TSP] Score</h3>
+                        <p><strong>Aplicação:</strong> Se você usa os Modos de Score (3, 4, 5 ou 6), o robô fará a somatória das forças antes de entrar.</p>
+                        <ul>
+                            <li><strong>Pontos por TF (Macro, Estrutural, Setup):</strong> Defina o peso de cada tempo. Ex: Se H2 em alta vale 5 pontos e D1 vale 3, o robô entende que a força compradora é 8.</li>
+                            <li><strong>Score Mínimo para Compra/Venda:</strong> A "Nota de Corte". Se você colocar <code>7</code>, o robô só atira se a soma das forças atingir 7. Bloqueia entradas em mercados "rabiscados" e sem direção.</li>
+                        </ul>
+                    </div>
+
+                    <div class="param-group">
+                        <h3><i class="fa-solid fa-bullseye"></i> Blocos: Saídas e Metas (O Padrão Base Original)</h3>
+                        <p><strong>Aplicação:</strong> Gestão de risco e alvos através do motor base.</p>
+                        <ul>
+                            <li><strong>Stoploss:</strong> Perda máxima aceitável. Distância a ser colocada a partir do preço de entrada ou preço médio.</li>
+                            <li><strong>Takeprofit:</strong> Alvo de ganho máximo da operação.</li>
+                            <li>
+                                <strong>Movimento Stop Loss (Breakeven):</strong>
+                                <br>• <em>Início do Breakeven SL:</em> Distância a partir da entrada em que será acionada a movimentação do stop.
+                                <br>• <em>Distância do Breakeven SL:</em> Distância em que o stoploss será reposicionado, contando a partir do início do breakeven.
+                                <br>💡 <em>Exemplo prático:</em> Está comprado no preço de 100.500. É definido o <strong>Início</strong> em <code>300</code> pontos e a <strong>Distância</strong> em <code>100</code> pontos. Quando o preço chegar em 100.800 (Início), o stoploss será movido para 100.700 (100 pts de distância do início).
+                            </li>
+                            <li>
+                                <strong>Movimento Stop Loss (Trailing Stop):</strong>
+                                <br>• <em>Início do Trailing:</em> A distância a favor que ativará a movimentação contínua do stop.
+                                <br>• <em>Passo do Trailing:</em> O tamanho do movimento (em pontos) que o stop dará a cada avanço do preço.
+                                <br>💡 <em>Exemplo prático:</em> Compra em 100.500 com stoploss inicial em 100.100. Trailing definido para Início de <code>200</code> pts e Passo de <code>10</code> pts. Quando o preço bater 100.700 (Início), o stoploss move 10 pontos para 100.110. Se o preço for para 100.710, o stop vai para 100.120, e assim por diante!
+                            </li>
+                            <li><strong>Saídas Parciais:</strong> Permite realizar o lucro ao longo do caminho. Ex: Entrou com 5 contratos, o robô vende 2 no primeiro alvo e deixa os outros 3 navegarem no Trailing Stop.</li>
+                        </ul>
+                    </div>
+                </div>
+            </details>
+
+
+                        <!-- SEÇÃO 6 -->
+            <details>
+                <summary>
+                    <div class="icon-group">
+                        <i class="fa-solid fa-book-open"></i>
+                        6. Referência Completa: Módulos Base
+                    </div>
+                    <i class="fa-solid fa-chevron-down chevron"></i>
+                </summary>
+                <div class="content">
+                    <p>O <em>Padrão Base Original</em> fornece uma infraestrutura robusta de gestão institucional. Abaixo estão explicações aplicadas de cada módulo de gerenciamento do robô.</p>
+
+                    <div class="param-group">
+                        <h3><i class="fa-solid fa-id-card"></i> Parametrização Inicial (Ambiente e Identidade)</h3>
+                        <p><strong>Magic Number (O CPF do Robô):</strong> Como o robô "carimba" suas ordens. Se você rodar dois robôs iguais na mesma conta (ex: um em WIN e outro em WDO), mude o Magic Number de um deles. Caso contrário, um tentará fechar a ordem do outro.</p>
+                        <p><strong>Tipo de Mercado (Execução da Corretora):</strong> Diferentes mercados têm diferentes regras no MetaTrader 5:</p>
+                        <ul>
+                            <li><strong>B3 (Ações e Futuros):</strong> Geralmente exige envio <code>Return</code> ou <code>FOK (Fill or Kill)</code>.</li>
+                            <li><strong>Forex / Mercado Internacional:</strong> Geralmente usa o modelo padrão de mercado global.</li>
+                            <li><strong>Deriv / Criptomoedas:</strong> O robô se adapta à liquidez contínua. Se a sua corretora rejeitar uma ordem dizendo "Unsupported filling mode", é aqui que você altera.</li>
+                        </ul>
+                        <p><strong>Modo Operacional (Validade da Ordem):</strong></p>
+                        <ul>
+                            <li><strong>Daytrade (B3):</strong> Use a validade <code>Day</code>. Ordens não executadas expiram no fim do dia automaticamente, evitando que sejam ativadas acidentalmente no dia seguinte.</li>
+                            <li><strong>Swing Trade / Forex:</strong> Use <code>GTC (Good Till Canceled)</code>. A ordem pendente ficará no servidor até ser ativada, não importando quantos dias demore.</li>
+                        </ul>
+                    </div>
+
+                    <div class="param-group">
+                        <h3><i class="fa-solid fa-clock"></i> Horários e Zeragem (Gestão de Tempo)</h3>
+                        <p>O controle temporal define quando o robô pode "trabalhar" e quando ele deve abortar a missão.</p>
+                        <ul>
+                            <li><strong>Horário Inicial / Final:</strong> A janela em que ele tem permissão para abrir novas ordens. Fora disso, ele apenas gerencia as abertas.</li>
+                            <li><strong>Horário de Zeragem:</strong> Ação compulsória. Ex: <code>17:30</code>. O robô fechará a mercado qualquer operação aberta. 
+                                <br>💡 <em>Aplicação Daytrade B3:</em> Obrigatório ativar para evitar ser pego pela margem punitiva da corretora no leilão de fechamento.
+                                <br>💡 <em>Aplicação Forex / Swing Trade:</em> <strong>Desative</strong> a zeragem, para que o robô carregue a posição durante a madrugada e os finais de semana.</li>
+                        </ul>
+                    </div>
+
+                    <div class="param-group">
+                        <h3><i class="fa-solid fa-layer-group"></i> Aumentos e Gradiente Linear</h3>
+                        <p>Módulos de gestão de posição avançada para alterar o tamanho da sua "mão" durante o trade.</p>
+                        <ul>
+                            <li><strong>Aumentos a Favor (Pirâmide):</strong> O robô adiciona lotes conforme o trade dá lucro, surfando tendências fortes e alavancando ganhos.</li>
+                            <li><strong>Aumentos Contra (Preço Médio):</strong> Se o trade ficar negativo, o robô realiza compras fracionadas abaixo da entrada. Isso reduz o seu preço médio de entrada, permitindo sair no empate ou lucro com uma simples correção. (Exige controle rigoroso de margem).</li>
+                            <li><strong>Gradiente Linear:</strong> Cria uma "malha" ou "grade" de operações no gráfico. 
+                                <br>💡 <em>Como usar:</em> Se o preço entra num "Range" (mercado lateral), você configura a <em>Distância da grade (ex: 50 pts)</em>. O robô espalhará limite de compras a cada 50 pontos caindo, e ordens de venda a cada 50 subindo. Ele transforma um mercado parado em uma máquina de moer pequenos lucros contínuos.</li>
+                        </ul>
+                    </div>
+
+                    <div class="param-group">
+                        <h3><i class="fa-solid fa-money-bill-trend-up"></i> Metas do Expert e Metas da Conta</h3>
+                        <p>O escudo patrimonial do robô possui duas camadas de defesa.</p>
+                        <ul>
+                            <li><strong>Metas do Expert:</strong> Analisa SOMENTE o P/L das ordens abertas com o <em>Magic Number</em>. Ex: Gain de R$ 500. Se este robô bater 500, ele para e encerra o dia, mesmo que você esteja operando outros ativos manualmente na mesma conta.</li>
+                            <li><strong>Metas da Conta:</strong> Analisa o saldo GERAL da corretora. Se você configurou um Loss Diário de -R$ 1.000,00 e tomou uma pancada operando pelo celular, o robô vê que o patrimônio global sofreu o limite. Ele interrompe o próprio funcionamento no MT5 para defender a sua conta de ruínas maiores.</li>
+                        </ul>
+                    </div>
+
+                    <div class="param-group">
+                        <h3><i class="fa-solid fa-shuffle"></i> Cross Order</h3>
+                        <p>Ferramenta fundamental para o mercado de Futuros do Brasil (B3).</p>
+                        <ul>
+                            <li><strong>O Problema:</strong> Gráficos do mês vigente (ex: <code>WINM24</code>) têm buracos e pouco histórico na abertura do contrato, prejudicando médias e indicadores. O gráfico contínuo perpétuo (<code>WIN@N</code>) é limpo, mas a corretora não aceita ordens de compra nele.</li>
+                            <li><strong>Como aplicar:</strong> Você arrasta o robô para o <code>WIN@N</code>. Nas opções, ativa o Cross Order e digita <code>WINM24</code> no campo do ativo. O robô lê os pivôs e faz as análises matemáticas na perfeição do gráfico perpétuo, mas envia a execução silenciosamente para o contrato do mês.</li>
+                        </ul>
+                    </div>
+                </div>
+            </details>
+
+
+            
+                    <div class="param-group">
+                        <h3><i class="fa-solid fa-shield-halved"></i> Licenciamento e Validade</h3>
+                        <p>O robô agora suporta até <strong>10 contas simultâneas</strong> por licença. A data de expiração é exibida em tempo real no painel do gráfico. Para renovar, contate o suporte.</p>
+                    </div>
+                    
+                    <div class="param-group">
+                        <h3><i class="fa-solid fa-tag"></i> Nome do Setup Inteligente</h3>
+                        <p>Se você deixar o campo "Nome do Setup" como <em>Setup Padrão</em>, o robô gerará automaticamente um nome técnico seguindo o padrão: <code>[Ativo] [Tempo Gráfico] - [Gatilho Selecionado]</code>.</p>
+                    </div>
+
+            <!-- SEÇÃO MULTI-GRÁFICOS -->
+            <details>
+                <summary>
+                    <div class="icon-group">
+                        <i class="fa-solid fa-layer-group"></i>
+                        Estratégia Avançada: Operação Multi-Gráficos
+                    </div>
+                    <i class="fa-solid fa-chevron-down chevron"></i>
+                </summary>
+                <div class="content">
+                    <p>Muitos traders perguntam se é possível pegar "todos os movimentos" (Rompimento + Pullback) ao mesmo tempo. A resposta é SIM, mas a forma correta é através de múltiplos gráficos.</p>
+                    
+                    <div class="param-group">
+                        <h3><i class="fa-solid fa-copy"></i> Uma Estratégia por Gráfico</h3>
+                        <p>Para evitar que o robô confunda as posições e o gerenciamento de risco, o ideal é abrir dois ou mais gráficos do mesmo ativo (ex: dois gráficos de WIN M1).</p>
+                    </div>
+
+                    <div class="param-group">
+                        <h3><i class="fa-solid fa-key"></i> Magic Numbers Diferentes</h3>
+                        <p><strong>REGRA DE OURO:</strong> Cada gráfico deve ter um <strong>Magic Number</strong> único (ex: Gráfico 1 = 111111, Gráfico 2 = 222222). Isso garante que o robô do Pullback não tente fechar a ordem do robô de Rompimento.</p>
+                    </div>
+
+                    <div class="param-group">
+                        <h3><i class="fa-solid fa-object-group"></i> Exemplo Sniper + Trend</h3>
+                        <ul>
+                            <li><strong>Gráfico 1:</strong> Configurado com o set <em>Sniper</em> (Modo 2 - Falha de Pullback). Ele busca comprar barato no recuo.</li>
+                            <li><strong>Gráfico 2:</strong> Configurado com o set <em>Trend</em> (Modo 0 - Rompimento). Ele busca surfar a explosão da nova tendência.</li>
+                        </ul>
+                        <p>Assim, você transforma seu MetaTrader em uma estação de comando completa, capturando todas as fases do mercado de forma organizada e profissional.</p>
+                    </div>
+                </div>
+            </details>
+
+        
+        <div class="footer-contact" style="text-align: center; margin-top: 40px; padding: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <p>Para suporte, atualizações e novos setups, acesse:</p>
+            <a href="https://rogerinhoramos.github.io" target="_blank" style="display: inline-block; padding: 12px 25px; background: var(--accent); color: white; border-radius: 8px; text-decoration: none; font-weight: 600; transition: 0.3s;">
+                <i class="fa-solid fa-globe"></i> rogerinhoramos.github.io
+            </a>
+        </div>
+        </div>
+    </div>
+
+    <!-- Script simples para permitir apenas 1 sanfona aberta por vez, opcional -->
+    <script>
+        const detailsElements = document.querySelectorAll("details");
+        detailsElements.forEach((targetDetail) => {
+            targetDetail.addEventListener("click", () => {
+                detailsElements.forEach((detail) => {
+                    if (detail !== targetDetail) {
+                        detail.removeAttribute("open");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
