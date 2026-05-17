@@ -682,8 +682,61 @@
                 </div>
             </details>
 
+            <!-- SEÇÃO SENTINEL (TWS) -->
+            <details>
+                <summary>
+                    <div class="icon-group">
+                        <i class="fa-solid fa-user-secret"></i>
+                        TheWise Portfolio Sentinel (TWS) — O Espião de Elite
+                    </div>
+                    <i class="fa-solid fa-chevron-down chevron"></i>
+                </summary>
+                <div class="content">
+                    <p>O <strong>TheWise Portfolio Sentinel (TWS)</strong> é um terminal quantitativo de portfólio standalone que opera integrado em tempo real ao MetaTrader 5, monitorando, consolidando e segmentando todas as operações da conta de forma autônoma.</p>
+                    
+                    <div class="param-group" style="border-left-color: var(--primary-color);">
+                        <h3><i class="fa-solid fa-circle-nodes"></i> Funcionamento e Transmissão Global</h3>
+                        <p>O robô espião <code>TheWise_Portfolio_Monitor.mq5</code> deve ser colocado em <strong>apenas um gráfico qualquer</strong> da sua conta. Em vez de ler apenas aquele gráfico, ele monitora silenciosamente a **conta inteira de forma global**, capturando:</p>
+                        <ul>
+                            <li>Saldo, Patrimônio Líquido, Margem Usada e Margem Livre da Corretora.</li>
+                            <li>Todas as posições abertas na conta (lotes, preço de entrada, SL, TP e P/L).</li>
+                            <li>O histórico recente de operações fechadas (lucro líquido consolidado).</li>
+                        </ul>
+                    </div>
 
+                    <div class="param-group" style="border-left-color: var(--secondary-color);">
+                        <h3><i class="fa-solid fa-desktop"></i> Painel de Telemetria no MT5 (On-Chart Comment)</h3>
+                        <p>Ao compilar e arrastar o espião para o gráfico, ele desenha um painel de status dinâmico e discreto no topo esquerdo do gráfico do seu MetaTrader 5 para dar a você total feedback visual:</p>
+                        <ul>
+                            <li><strong>CONECTADO 🟢 (Sincronizado com Sucesso):</strong> Indica que o servidor local Flask (porta 5000) está ativo e recebendo as atualizações. A hora do último sinal é atualizada na tela a cada 5 segundos.</li>
+                            <li><strong>ERRO DE CONEXÃO 🔴 (Causa: URL NÃO AUTORIZADA):</strong> O MetaTrader barrou o envio dos dados. Vá em <em>Ferramentas ➡️ Opções ➡️ Experts</em>, marque a caixa de <em>WebRequest</em> e adicione a URL <code>http://127.0.0.1:5000</code>.</li>
+                            <li><strong>ERRO DE CONEXÃO 🔴 (Código MT5: 4060):</strong> O servidor web está desligado. Execute o arquivo <code>LIGAR_PORTFOLIO.bat</code> na pasta do Sentinel para reativar a porta 5000.</li>
+                        </ul>
+                    </div>
 
+                    <div class="param-group" style="border-left-color: var(--primary-color);">
+                        <h3><i class="fa-solid fa-shuffle"></i> Segmentação por Magic Numbers</h3>
+                        <p>O painel web do Sentinel divide as operações de forma inteligente baseado nos Magic Numbers (IDs de robô):</p>
+                        <ul>
+                            <li><strong>Operações Manuais:</strong> Ordens enviadas por cliques manuais possuem <code>Magic = 0</code>. O Sentinel as categoriza como <strong>"Manual"</strong> 👤.</li>
+                            <li><strong>Robô TSP:</strong> O robô de premissas estruturais opera com <code>Magic = 2026</code>. O Sentinel as agrupa como <strong>"TSP Robô"</strong> 🤖.</li>
+                            <li><strong>Outros Robôs:</strong> Qualquer outra ordem com número mágico diferente é agrupada separadamente, mantendo o gráfico de pizza de volume e lucro líquido sempre preciso!</li>
+                        </ul>
+                    </div>
+
+                    <div class="param-group" style="border-left-color: var(--secondary-color);">
+                        <h3><i class="fa-solid fa-palette"></i> Switcher de 4 Temas & Gráficos Adaptativos</h3>
+                        <p>O painel web do Sentinel conta com um seletor dinâmico no topo do cabeçalho que permite alternar instantaneamente entre quatro temas premium:</p>
+                        <ul>
+                            <li>🌌 <strong>Classic Navy (TSP Era):</strong> Visual institucional azul profundo e realces dourados.</li>
+                            <li>⚡ <strong>Cyberpunk Glow:</strong> Visual de alta tecnologia com tons pretos e neons rosa e azul.</li>
+                            <li>🟢 <strong>Matrix Green:</strong> Visual de terminal hacker clássico em verde fosforescente.</li>
+                            <li>⚪ <strong>Institutional Light:</strong> Visual claro limpo, com fundo cinza e realces em azul royal.</li>
+                        </ul>
+                        <p>💡 <em>Gráficos Adaptativos:</em> Os gráficos de patrimônio e ativos (Chart.js) lêem as cores do CSS ativo no navegador e se pintam automaticamente com as mesmas cores do tema selecionado, mantendo a harmonia visual na hora!</p>
+                    </div>
+                </div>
+            </details>
         
         <div class="footer-contact" style="text-align: center; margin-top: 40px; padding: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
             <p>Para suporte, atualizações e novos setups, acesse:</p>

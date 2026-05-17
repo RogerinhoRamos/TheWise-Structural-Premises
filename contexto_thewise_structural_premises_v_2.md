@@ -1029,6 +1029,201 @@ A essência do projeto é:
 
 ---
 
+- logs;
+- horários;
+- framework padrão base original.
+
+---
+
+# 16. O QUE SERÁ ALTERADO
+
+Principalmente:
+
+```cpp
+check_entrada_compra()
+check_entrada_venda()
+```
+
+Substituindo:
+
+- entradas HiLo puras;
+- sinais simplistas;
+- dependência exclusiva de buffers.
+
+---
+
+# 17. SISTEMA DE SINAIS
+
+A engine atual já possui:
+
+```cpp
+check_sinal()
+```
+
+Esse sistema será reaproveitado.
+
+Ele já:
+
+- lê buffers;
+- lê indicadores;
+- compara valores;
+- trabalha com candles;
+- abstrai sinais.
+
+Isso permitirá:
+
+- evolução rápida;
+- modularidade;
+- expansão futura.
+
+---
+
+# 18. ENUMS FUTUROS
+
+Exemplo:
+
+```cpp
+enum e_buys_in
+{
+   es_buy_in_1,
+   es_buy_in_2,
+   es_buy_in_3,
+   es_buy_in_4,
+   es_buy_in_5,
+   es_buy_in_6, // Structural Premises
+   es_buy_in_7, // Structural + HiLo
+   es_buy_in_8  // Structural + Score
+};
+```
+
+---
+
+# 19. BACKTEST E PESQUISA
+
+O projeto será preparado para:
+
+- backtest MT5;
+- otimização genética;
+- robustez;
+- Monte Carlo;
+- Walk Forward Analysis;
+- análise multiativo;
+- análise por horário;
+- análise por volatilidade.
+
+---
+
+# 20. TESTES DE ROBUSTEZ
+
+Futuramente:
+
+- spread variável;
+- slippage;
+- atraso;
+- Monte Carlo;
+- troca de parâmetros;
+- teste fora da amostra;
+- teste multi contratos.
+
+---
+
+# 21. WALK FORWARD ANALYSIS
+
+Estrutura futura:
+
+```text
+Treina 3 meses
+Testa 1 mês
+```
+
+Objetivo:
+
+- validar estabilidade;
+- evitar overfitting;
+- validar edge real.
+
+---
+
+# 22. ROADMAP
+
+## V1
+Estrutural Visual.
+
+---
+
+## V2
+Alertas estruturais.
+
+---
+
+## V3
+Semi automático.
+
+---
+
+## V4
+Automático.
+
+---
+
+## V5
+Research Engine completo.
+
+---
+
+# 23. FUTURO DO PROJETO
+
+O projeto será preparado para:
+
+- IA estrutural;
+- machine learning;
+- fluxo;
+- tape reading;
+- scanners;
+- dashboards;
+- múltiplos ativos;
+- commodities;
+- índices;
+- criptomoedas.
+
+---
+
+# 24. IDENTIDADE DO PROJETO
+
+Nome oficial:
+
+# TheWise Structural Premises
+
+Sigla:
+
+# TSP
+
+Conceito:
+
+"Structural context.
+Operational premises.
+Probabilistic execution."
+
+---
+
+# 25. FILOSOFIA FINAL
+
+O projeto NÃO busca prever mercado.
+
+Busca:
+
+- interpretar estrutura;
+- validar contexto;
+- detectar falha;
+- operar probabilidade;
+- buscar continuidade estrutural.
+
+A essência do projeto é:
+
+# Estrutura + Contexto + Falha + Continuidade
+
+---
+
 # 26. OBSERVAÇÃO IMPORTANTE
 
 A estratégia original possui:
@@ -1063,7 +1258,8 @@ A missão é:
 ✔️ Estratégia conceitual definida
 ✔️ Roadmap definido
 ✔️ Nome oficial definido
-🔄 Próxima etapa: implementação da StructureEngine
+✔️ Implementação da StructureEngine e V1 (Multi-timeframe, Gatilhos, Zonas, OnTester/TWR) concluída!
+✔️ Criação e implantação standalone do TheWise Portfolio Sentinel (TWS) no diretório geral, com repositório Git isolado, telemetria on-chart e painel premium com 4 temas e Chart.js adaptativo!
 
 
 ---
@@ -1115,4 +1311,12 @@ Principais integrações realizadas:
 - **Walk Forward Analysis (WFA)**: Estruturação para testes divididos em In-Sample (treino e otimização) e Out-Of-Sample (forward/validação) para atestar a robustez real dos setups.
 - **Manual de Otimização**: Criação de seção dedicada no manual operacional ensinando a resolver o erro clássico de "no optimized parameter selected" e a salvar/carregar arquivos `.set` para automação operacional.
 
-
+## 14.5 Implantação do TheWise Portfolio Sentinel (TWS)
+Como extensão vital para o ecossistema quantitativo, foi criado o terminal de monitoramento standalone em tempo real localizado em seu próprio repositório isolado no diretório geral:
+- **Diretório Standalone**: `d:\Projetos 2026 Antigravity\TheWise Portfolio Sentinel`
+- **Componentes do Terminal**:
+  - `portfolio_server.py`: Back-end Flask que gerencia conexões, recebe telemetrias via requisições POST e armazena os dados em `portfolio_data.json` com fallback para simulações (mock) de alta fidelidade.
+  - `portfolio_dashboard.html`: SPA de última geração KSB-style com 4 temas dinâmicos (Navy, Cyberpunk, Matrix, Light), Chart.js com cores adaptativas ao tema selecionado e sidebar 100% compacta e retrátil sem erros de sobreposição.
+  - `TheWise_Portfolio_Monitor.mq5`: Robô espião que roda no gráfico do MT5 e monitora o balanço da conta, ordens ativas e fechadas globalmente, integrando um **Painel de Telemetria no Gráfico (Comment MQL5)** com cores verde/vermelho de status de conexão e guias de resolução de problemas em tempo real.
+  - `LIGAR_PORTFOLIO.bat`: Inicializador seguro com arte ASCII que executa `pip install --user flask` para contornar qualquer barreira de permissão no Windows e abre automaticamente a URL local no navegador padrão.
+- **Isolamento de Versão**: Inicializado repositório Git isolado na pasta do Sentinel, deixando a árvore de desenvolvimento do robô principal `Robo TheWise Structural Premises` 100% limpa de arquivos web auxiliares.
