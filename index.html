@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TheWise Structural Premises V1 | Trading Institucional de Elite</title>
+    <link rel="icon" type="image/png" href="favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -286,12 +288,81 @@
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            z-index: 5;
+            transition: all 0.3s ease;
+        }
+        
+        .scroll-indicator span {
+            font-size: 0.7rem;
+            font-family: 'Outfit', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.7;
+            transition: color 0.3s, opacity 0.3s;
+        }
+        
+        .scroll-indicator:hover span {
+            color: var(--primary);
+            opacity: 1;
+        }
+        
+        .scroll-indicator .mouse {
+            width: 22px;
+            height: 36px;
+            border: 2px solid var(--text-muted);
+            border-radius: 12px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            transition: border-color 0.3s;
+        }
+        
+        .scroll-indicator:hover .mouse {
+            border-color: var(--primary);
+        }
+        
+        .scroll-indicator .wheel {
+            width: 4px;
+            height: 8px;
+            background-color: var(--text-muted);
+            border-radius: 2px;
+            position: absolute;
+            top: 6px;
+            animation: scrollWheel 1.5s ease-in-out infinite;
+            transition: background-color 0.3s;
+        }
+        
+        .scroll-indicator:hover .wheel {
+            background-color: var(--primary);
+        }
+        
+        @keyframes scrollWheel {
+            0% { transform: translateY(0); opacity: 1; }
+            50% { transform: translateY(6px); opacity: 0.3; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
 
         @media (max-width: 768px) {
             .showcase-container { gap: 2rem; }
             .contact-box { padding: 2rem; }
+            .hero { height: auto; min-height: 100vh; padding-bottom: 6rem; }
+            .scroll-indicator { bottom: 1.5rem; }
         }
     </style>
+
 </head>
 <body>
 
@@ -301,13 +372,20 @@
             <h1>TheWise Structural Premises V1</h1>
             <p>O Robô que simula a leitura humana discricionária de forma 100% matemática. Tecnologia institucional para traders de elite.</p>
             <div class="cta-group">
-                <a href="#manual" class="btn btn-primary">Começar Agora</a>
+                <a href="#features" class="btn btn-primary">Começar Agora</a>
                 <a href="manual_operacional_tsp.html" class="btn btn-outline" target="_blank">
                     <i class="fa-solid fa-book-open"></i> Ver Manual
                 </a>
             </div>
         </div>
+        <a href="#features" class="scroll-indicator">
+            <span>Descobrir</span>
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+        </a>
     </section>
+
 
     <!-- Features -->
     <section class="features" id="features">
@@ -331,8 +409,14 @@
                 <h3>8 Inteligências de Entrada</h3>
                 <p>Escolha entre os modos <b>TREND</b>, <b>PULLBACK</b>, <b>SNIPER</b>, <b>SCORE</b>, <b>SC+PB</b>, <b>SUPREME</b> ou <b>SC+ADX</b>. O robô se adapta cirurgicamente ao seu perfil.</p>
             </div>
+            <div class="feature-card">
+                <i class="fa-solid fa-chart-line"></i>
+                <h3>Robustez Quantitativa</h3>
+                <p>Equipado com o custom index <b>TWR (OnTester)</b> e suporte a <b>Walk Forward Analysis</b> para eliminar o risco de curvas super-ajustadas.</p>
+            </div>
         </div>
     </section>
+
 
     <!-- Showcase -->
     <section class="showcase">

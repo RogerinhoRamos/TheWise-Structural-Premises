@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TheWise Structural Premises V1 - Manual</title>
+    <title>Manual Operacional — TheWise Structural Premises</title>
+    <link rel="icon" type="image/png" href="favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -616,6 +617,54 @@
                     </div>
                 </div>
             </details>
+            
+            <!-- SEÇÃO DE OTIMIZAÇÃO E ROBUSTEZ QUANTITATIVA -->
+            <details>
+                <summary>
+                    <div class="icon-group">
+                        <i class="fa-solid fa-chart-line"></i>
+                        Guia de Otimização e Robustez Quantitativa (WFA & Métrica Customizada)
+                    </div>
+                    <i class="fa-solid fa-chevron-down chevron"></i>
+                </summary>
+                <div class="content">
+                    <p>O robô <strong>TheWise Structural Premises V1</strong> foi construído sob uma forte filosofia quantitativa de eliminação de sorte e ajuste excessivo de curvas (<em>overfitting</em>). Para isso, implementamos suporte nativo para análises institucionais avançadas de robustez.</p>
+                    
+                    <div class="param-group">
+                        <h3><i class="fa-solid fa-calculator"></i> A Métrica Customizada de Robustez (TWR Score)</h3>
+                        <p>O robô injeta diretamente no testador do MetaTrader 5 o <strong>TWR (TheWise Robustness Score)</strong> via código na função de otimização customizada (<code>OnTester</code>). A fórmula é calculada a cada rodada da seguinte forma:</p>
+                        <div class="formula-box" style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px; font-family: monospace; font-size: 0.95rem; border: 1px solid var(--border-color); margin: 10px 0; color: #f59e0b; text-align: center;">
+                            TWR = (Lucro Líquido / Drawdown Máximo) × Fator de Lucro × Penalização Estatística
+                        </div>
+                        <ul>
+                            <li><strong>Drawdown Máximo de Capital:</strong> Em vez de otimizar apenas pelo lucro nominal, a nossa métrica divide o lucro pelo rebaixamento máximo de capital líquido. Isso prioriza setups com baixíssimo risco patrimonial.</li>
+                            <li><strong>Fator de Lucro:</strong> Acelera o score dos setups que possuem um histórico com alta taxa de acerto e proporção ganho/perda de elite.</li>
+                            <li><strong>Penalização Estatística Rigorosa:</strong> Se o setup realizar <strong>menos de 30 operações</strong> no período histórico selecionado, o score sofre uma redução drástica (penalização quadrática). Isso força o otimizador genético a descartar setups que deram "lucro de sorte" em poucos trades e focar na consistência estatística de grandes amostras de dados.</li>
+                        </ul>
+                    </div>
+
+                    <div class="param-group">
+                        <h3><i class="fa-solid fa-gears"></i> Como Otimizar usando o Genético do MT5</h3>
+                        <ol style="margin-left: 20px; color: var(--text-muted);">
+                            <li style="margin-bottom: 8px;">Abra o <strong>Provador de Estratégias (Ctrl + R)</strong> no seu MetaTrader 5.</li>
+                            <li style="margin-bottom: 8px;">Selecione o robô <code>TheWise Structural Premises V1.mq5</code>.</li>
+                            <li style="margin-bottom: 8px;">Ative a opção de <strong>Otimização</strong> e mude para <strong>"Algoritmo Genético Completo"</strong>.</li>
+                            <li style="margin-bottom: 8px;">No seletor de critério ao lado, escolha <strong>"Métrica Personalizada"</strong> (ou <em>Custom Criterion</em>).</li>
+                            <li style="margin-bottom: 8px;">Marque as caixas de variáveis dos parâmetros que você quer otimizar (ex: <code>m_tsp_score_min</code> de 5 a 15, Fibo Sup de 38 a 61, etc.) e clique em <strong>Iniciar</strong>.</li>
+                        </ol>
+                    </div>
+
+                    <div class="param-group">
+                        <h3><i class="fa-solid fa-arrows-split-up-and-left"></i> O Teste Definitivo: Walk Forward Analysis (WFA)</h3>
+                        <p>O Walk Forward divide o período de testes em duas etapas automáticas: <strong>In-Sample</strong> (onde o robô aprende e otimiza os parâmetros) e <strong>Out-of-Sample / Forward</strong> (onde o robô é executado em dados de mercado inéditos que ele nunca viu).</p>
+                        <ul>
+                            <li><strong>Configuração sugerida:</strong> Ative a aba <strong>Forward</strong> no MT5 e defina como <strong>1/4</strong> ou <strong>1/3</strong>.</li>
+                            <li><strong>Verificação de Robustez:</strong> Se as configurações otimizadas passarem com lucro e baixo drawdown no período Forward (o último 1/4 do tempo total), você tem um setup blindado e matematicamente provado contra as mudanças de comportamento do mercado.</li>
+                        </ul>
+                    </div>
+                </div>
+            </details>
+
 
         
         <div class="footer-contact" style="text-align: center; margin-top: 40px; padding: 20px; border-top: 1px solid rgba(255,255,255,0.1);">

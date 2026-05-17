@@ -5450,6 +5450,34 @@ void OnTrade()
    in_pro._atualizar = true;
   }
 //+------------------------------------------------------------------+
+//| [TSP] ONTESTER - METRICA PERSONALIZADA DE OTIMIZACAO E ROBUSTEZ  |
+//+------------------------------------------------------------------+
+double OnTester(void)
+  {
+   double profit = TesterStatistics(STAT_PROFIT);
+   double drawdown = TesterStatistics(STAT_EQUITY_DRAWDOWN); // Rebaixamento máximo de capital líquido na moeda da conta
+   double pf = TesterStatistics(STAT_PROFIT_FACTOR);
+   double trades = TesterStatistics(STAT_TRADES);
+   
+   if(drawdown <= 0) drawdown = 1.0; // Evita divisão por zero
+   if(profit <= 0) return 0.0;       // Sem lucro líquido, nota zero
+   
+   // Fórmula robusta: Lucro Líquido / Drawdown Máximo * Fator de Lucro
+   double score = (profit / drawdown) * pf;
+   
+   // Penalização estatística para poucas operações
+   // Se o setup fizer menos de 30 operações, penalizamos quadrática e rigorosamente
+   // para que o otimizador do MT5 ignore sets que dependem de poucas operações "de sorte"
+   if(trades < 30.0)
+     {
+      double penalty = trades / 30.0;
+      score = score * penalty * penalty;
+     }
+     
+   return score;
+  }
+//+------------------------------------------------------------------+
+
 
 //+------------------------------------------------------------------+
 //| [TSP] MOTOR ESTRUTURAL (FASE 2)                                  |
