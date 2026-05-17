@@ -5455,7 +5455,7 @@ void OnTrade()
 double OnTester(void)
   {
    double profit = TesterStatistics(STAT_PROFIT);
-   double drawdown = TesterStatistics(STAT_EQUITY_DRAWDOWN); // Rebaixamento máximo de capital líquido na moeda da conta
+   double drawdown = TesterStatistics(STAT_EQUITY_DD); // Rebaixamento máximo de capital líquido na moeda da conta
    double pf = TesterStatistics(STAT_PROFIT_FACTOR);
    double trades = TesterStatistics(STAT_TRADES);
    
