@@ -661,8 +661,27 @@
                             <li><strong>Verificação de Robustez:</strong> Se as configurações otimizadas passarem com lucro e baixo drawdown no período Forward (o último 1/4 do tempo total), você tem um setup blindado e matematicamente provado contra as mudanças de comportamento do mercado.</li>
                         </ul>
                     </div>
+
+                    <div class="param-group" style="background: rgba(239, 68, 68, 0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(239, 68, 68, 0.2); margin-top: 2rem;">
+                        <h3><i class="fa-solid fa-triangle-exclamation" style="color: #ef4444;"></i> Solução de Erros Comuns & Praticidade com Arquivos .SET</h3>
+                        <p><strong>Erro: "no optimized parameter selected, please check input(s) to be optimized and set start, step and stop values"</strong></p>
+                        <p>Este erro ocorre quando você ativa a otimização no MT5, mas não seleciona quais parâmetros ele deve alterar durante os testes. Para resolver:</p>
+                        <ol style="margin-left: 20px; margin-bottom: 15px; color: var(--text-muted);">
+                            <li style="margin-bottom: 6px;">Vá na aba <strong>Parâmetros de Entrada (Inputs)</strong> no Strategy Tester.</li>
+                            <li style="margin-bottom: 6px;"><strong>Marque a caixinha de seleção (checkbox)</strong> na coluna esquerda dos parâmetros que deseja otimizar (ex: <code>m_tsp_score_min</code>).</li>
+                            <li style="margin-bottom: 6px;">Configure os valores das colunas <strong>Início (Start)</strong>, <strong>Passo (Step)</strong> e <strong>Fim (Stop)</strong> para definir a faixa de testes do MT5.</li>
+                        </ol>
+                        
+                        <p>💡 <strong>Como automatizar usando Arquivos de Parâmetros (.SET):</strong></p>
+                        <p>Para não precisar marcar e configurar as caixinhas de variáveis manualmente todas as vezes:</p>
+                        <ul style="margin-left: 20px; color: var(--text-muted);">
+                            <li style="margin-bottom: 6px;"><strong>Salvar Configuração:</strong> Clique com o botão direito sobre a tabela de parâmetros de entrada no Strategy Tester e clique em <strong>Salvar (Save)</strong> para gerar um arquivo <code>.set</code>.</li>
+                            <li style="margin-bottom: 6px;"><strong>Carregar Configuração:</strong> Em qualquer outro ativo ou teste futuro, clique com o botão direito sobre a tabela de parâmetros, selecione <strong>Carregar (Load)</strong>, abra o arquivo <code>.set</code> e o MT5 preencherá automaticamente todas as caixas, inícios, passos e fins!</li>
+                        </ul>
+                    </div>
                 </div>
             </details>
+
 
 
         

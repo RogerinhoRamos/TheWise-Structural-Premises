@@ -1,4 +1,4 @@
-﻿# CONTEXTO — THEWISE STRUCTURAL PREMISES
+# CONTEXTO — THEWISE STRUCTURAL PREMISES
 Versão: 2.0
 Projeto: TheWise Structural Premises
 Origem: Evolução do TheWise HiLo V4
@@ -1108,4 +1108,11 @@ Principais integrações realizadas:
 ## 14.3 Melhorias de UX (Experiência do Usuário)
 - **Auto-Documentação**: Inclusão de comentários descritivos em todos os parâmetros input. Agora, o usuário vê a explicação do parâmetro diretamente na janela de configurações do MetaTrader 5.
 - **Throttling de Frequência**: Ajuste da trava de barras (_max_buy_in) para 1, permitindo agilidade sem comprometer a segurança de ordens duplicadas no mesmo candle.
+
+## 14.4 Módulo de Robustez e Otimização Quantitativa
+- **Função OnTester (TWR Score)**: Implementação da métrica customizada de robustez *TheWise Robustness Score (TWR)* baseada na fórmula `(Lucro Líquido / Drawdown Máximo) * Fator de Lucro`.
+- **Penalização Estatística**: Sets com menos de 30 operações no período de testes são severamente penalizados de forma quadrática para mitigar o risco de *overfitting* e excluir resultados de "sorte".
+- **Walk Forward Analysis (WFA)**: Estruturação para testes divididos em In-Sample (treino e otimização) e Out-Of-Sample (forward/validação) para atestar a robustez real dos setups.
+- **Manual de Otimização**: Criação de seção dedicada no manual operacional ensinando a resolver o erro clássico de "no optimized parameter selected" e a salvar/carregar arquivos `.set` para automação operacional.
+
 
