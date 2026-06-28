@@ -1,0 +1,10 @@
+*.mq5
+*.ex5
+*.set
+*.ps1
+contexto_*.md
+manual_operacional_tsp.md
+README.md
+build_*.ps1
+*_backup*
+* - Copia.*
