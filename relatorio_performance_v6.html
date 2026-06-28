@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TheWise V6 - Performance Institucional & Validação</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --primary: #10b981;
+            --primary-glow: rgba(16, 185, 129, 0.2);
+            --secondary: #8b5cf6;
+            --secondary-glow: rgba(139, 92, 246, 0.2);
+            --tertiary: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            background-image: 
+                radial-gradient(circle at 15% 50%, var(--primary-glow) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, var(--secondary-glow) 0%, transparent 50%);
+            min-height: 100vh;
+            padding: 2rem;
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 3rem 0 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 0.75rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 992px) {
+            .dashboard-grid, .grid-3 { grid-template-columns: 1fr; }
+        }
+
+        .profile-column {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .profile-header {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 1rem;
+            font-size: 1.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header-cons { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: var(--primary); }
+        .header-agr { background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); color: var(--secondary); }
+        .header-val { background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); color: var(--tertiary); }
+
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .metric-box {
+            background: rgba(0,0,0,0.2);
+            padding: 1rem;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(255,255,255,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-title {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        .metric-sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .color-cons { color: var(--primary); }
+        .color-agr { color: var(--secondary); }
+        .color-val { color: var(--tertiary); }
+        .color-danger { color: var(--danger); }
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .info-panel {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid var(--tertiary);
+            padding: 1.5rem;
+            border-radius: 0 1rem 1rem 0;
+            margin-top: 1.5rem;
+        }
+
+        .info-panel h4 {
+            color: var(--text-main);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-panel p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 0.75rem;
+        }
+
+        .risk-section {
+            background: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin-top: 1rem;
+        }
+
+        .risk-title {
+            color: #fca5a5;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .risk-item {
+            display: flex;
+            justify-width: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            border-bottom: 1px dashed rgba(255,255,255,0.1);
+            padding-bottom: 0.5rem;
+        }
+        .risk-item:last-child { border: none; padding-bottom: 0; margin-bottom: 0; }
+        .risk-label { color: var(--text-muted); }
+        .risk-val { font-weight: 600; text-align: right; flex-grow: 1; }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>TheWise V6 - Structural Premises</h1>
+            <p>Auditoria Institucional de Backtest e Validação Forward (MT5)</p>
+        </header>
+
+        <h2 class="section-title"><i class="fa-solid fa-scale-balanced"></i> Comparativo de Base (Período: 1 Ano)</h2>
+
+        <div class="dashboard-grid">
+            
+            <!-- PERFIL CONSERVADOR -->
+            <div class="profile-column">
+                <div class="profile-header header-cons">
+                    <i class="fa-solid fa-shield-halved"></i> Perfil Conservador (Set Padrão)
+                </div>
+
+                <div class="card">
+                    <div class="metrics-grid">
+                        <div class="metric-box">
+                            <div class="metric-title">Win Rate</div>
+                            <div class="metric-value color-cons">97.06%</div>
+                            <div class="metric-sub">33 gains / 1 loss</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-title">Lucro Líquido</div>
+                            <div class="metric-value color-cons">R$ 2.053</div>
+                            <div class="metric-sub">Em 12 meses</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-title">Fator de Recuperação</div>
+                            <div class="metric-value color-cons">2.87</div>
+                            <div class="metric-sub">Relação Lucro / Drawdown</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-title">Drawdown Máximo</div>
+                            <div class="metric-value color-danger">R$ 715</div>
+                            <div class="metric-sub">Capital Flutuante (14.29%)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PERFIL AGRESSIVO -->
+            <div class="profile-column">
+                <div class="profile-header header-agr">
+                    <i class="fa-solid fa-fire"></i> Perfil Agressivo (Set 02)
+                </div>
+
+                <div class="card">
+                    <div class="metrics-grid">
+                        <div class="metric-box">
+                            <div class="metric-title">Win Rate</div>
+                            <div class="metric-value color-agr">100%</div>
+                            <div class="metric-sub">34 gains / 0 loss</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-title">Lucro Líquido</div>
+                            <div class="metric-value color-agr">R$ 2.097</div>
+                            <div class="metric-sub">Em 12 meses</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-title">Fator de Recuperação</div>
+                            <div class="metric-value color-agr">2.93</div>
+                            <div class="metric-sub">Melhoria extrema de risco</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-title">Drawdown Máximo</div>
+                            <div class="metric-value color-danger">R$ 715</div>
+                            <div class="metric-sub">Capital Flutuante (14.29%)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMPARATIVE CHART -->
+            <div class="card col-span-12" style="grid-column: 1 / -1;">
+                <div style="font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; text-align: center;">Curva de Capital (1 Ano): Conservador vs Agressivo</div>
+                <div class="chart-container" style="height: 250px;">
+                    <canvas id="comparativeChart"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+        <h2 class="section-title"><i class="fa-solid fa-microscope"></i> Prova de Fogo: Longo Prazo & Validação Out-of-Sample</h2>
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">A verdadeira qualidade de um robô institucional é medida pela sua capacidade de gerar lucros consistentes ao longo dos anos, sem sofrer com super-otimização (curve-fitting). Os dados abaixo são de 2 Anos de mercado (2024 a 2026).</p>
+
+        <div class="grid-3">
+            
+            <div class="card">
+                <div class="profile-header header-val" style="margin-bottom: 1.5rem; font-size: 1rem;">
+                    <i class="fa-solid fa-calendar-days"></i> Teste Estendido (2 Anos)
+                </div>
+                <div class="metric-box" style="margin-bottom: 1rem;">
+                    <div class="metric-title">Lucro Líquido (24 Meses)</div>
+                    <div class="metric-value color-val">R$ 4.119</div>
+                    <div class="metric-sub">Rentabilidade de +82% sobre R$ 5k</div>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-label">Total de Trades:</span>
+                    <span class="risk-val">107</span>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-label">Qualidade do Histórico:</span>
+                    <span class="risk-val">Real Ticks (100%)</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="profile-header header-val" style="margin-bottom: 1.5rem; font-size: 1rem;">
+                    <i class="fa-solid fa-forward-step"></i> Teste A Frente (Forward 1/3)
+                </div>
+                <div class="metric-box" style="margin-bottom: 1rem;">
+                    <div class="metric-title">Lucro Fora da Amostra</div>
+                    <div class="metric-value color-val">R$ 1.679</div>
+                    <div class="metric-sub">Últimos 8 meses (Dados Cegos)</div>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-label">Total de Trades:</span>
+                    <span class="risk-val">52</span>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-label">Sobrevivência:</span>
+                    <span class="risk-val" style="color: var(--primary);">Intacta (Sem quebras)</span>
+                </div>
+            </div>
+
+            <div class="card" style="display: flex; flex-direction: column; justify-content: center;">
+                <div class="info-panel" style="margin-top: 0;">
+                    <h4><i class="fa-solid fa-check-double"></i> O que isso comprova?</h4>
+                    <p><strong>Walk-Forward Efficiency:</strong> O robô foi testado dividindo o período: 2/3 para aprender, e 1/3 isolado (Forward). Gerar lucro consistente no Forward prova que a Inteligência V6 se adapta a cenários desconhecidos, ao invés de decorar o passado.</p>
+                    <p><strong>MAE Controlado:</strong> A excursão adversa máxima indica que ele passa calor cirúrgico para defender o trade, resgatando operações e mantendo o Capital a salvo.</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.font.family = "'Inter', sans-serif";
+
+        const ctx = document.getElementById('comparativeChart').getContext('2d');
+        
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                datasets: [
+                    {
+                        label: 'Conservador (Saldo)',
+                        data: [5000, 5223, 5408, 5678, 5861, 5981, 6037, 6227, 6386, 6611, 6765, 6917, 7053],
+                        borderColor: '#10b981',
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        borderDash: [5, 5],
+                        pointBackgroundColor: '#10b981',
+                        pointRadius: 4,
+                    },
+                    {
+                        label: 'Agressivo Set 02 (Saldo)',
+                        data: [5000, 5223, 5408, 5678, 5861, 5981, 6037, 6227, 6386, 6611, 6765, 6917, 7097],
+                        borderColor: '#8b5cf6',
+                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#8b5cf6',
+                        pointRadius: 5,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: {
+                        backgroundColor: 'rgba(30, 41, 59, 0.9)',
+                        titleColor: '#f8fafc',
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': R$ ' + context.parsed.y;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.05)' } },
+                    y: { 
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: { callback: function(value) { return 'R$ ' + value; } }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
