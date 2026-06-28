@@ -1,12 +1,12 @@
-//+------------------------------------------------------------------+
+﻿//+------------------------------------------------------------------+
 //|                                           https://padrão base original.com.br |
 //|                                           contato@padrão base original.com.br |
 //+------------------------------------------------------------------+
-#property copyright   "TheWise Structural Premises"
-#property link        "https://github.com/rogerinhoramos"
-#property version     "1.00"
-#property description "TheWise Structural Premises V1"
-#property description "Structural context. Operational premises. Probabilistic execution."
+#property copyright   "Construtor padrão base original"
+#property link        "https://padrão base original.com.br"
+#property version     "1.65"
+#property description "Soluções automatizadas para renda variável"
+#property description "Plataforma atualizada em 23/04/2026 na versão 1.65 - Case4 janela com verificacao de continuidade"
 
 struct s_position
   {
@@ -247,42 +247,34 @@ enum e_semana
 
 enum e_buys_in
   {
-   es_buy_in_1 = 0, // [TSP] Tendencia Estrutural
-   es_buy_in_2 = 1, // [TSP] Tendencia + Pullback
-   es_buy_in_3 = 2, // [TSP] Tendencia + Pullback + Falha
-   es_buy_in_4 = 3, // [TSP] Score Contextual
-   es_buy_in_5 = 4, // [TSP] Score + Pullback
-   es_buy_in_6 = 5, // [TSP] Score + Pullback + Falha
-   es_buy_in_7 = 6, // [TSP] Score + ADX
-   es_buy_in_8 = 7  // Sem Sinal /Boleta-Manual
+   es_buy_in_1 = 0, // Entrada compra 1 HiLo
+   es_buy_in_2 = 1, // Entrada compra 2 Hilo+RSI
+   es_buy_in_3 = 2, // Sem Sinal /Boleta-Manual
+   es_buy_in_4 = 3, // Entrada compra 4 HiLo+ADX
+   es_buy_in_5 = 4  // Entrada compra 5 HiLo+Janela+ADX
   };
 
 enum e_sells_in
   {
-   es_sell_in_1 = 0, // [TSP] Tendencia Estrutural
-   es_sell_in_2 = 1, // [TSP] Tendencia + Pullback
-   es_sell_in_3 = 2, // [TSP] Tendencia + Pullback + Falha
-   es_sell_in_4 = 3, // [TSP] Score Contextual
-   es_sell_in_5 = 4, // [TSP] Score + Pullback
-   es_sell_in_6 = 5, // [TSP] Score + Pullback + Falha
-   es_sell_in_7 = 6, // [TSP] Score + ADX
-   es_sell_in_8 = 7  // Sem Sinal /Boleta-Manual
+   es_sell_in_1 = 0, // Entrada venda 1 HiLo
+   es_sell_in_2 = 1, // Entrada venda 2 HiLo+RSI
+   es_sell_in_3 = 2, // Sem Sinal /Boleta-Manual
+   es_sell_in_4 = 3, // Entrada venda 4 HiLo+ADX
+   es_sell_in_5 = 4  // Entrada venda 5 HiLo+Janela+ADX
   };
 
 enum e_buys_out
   {
-   es_buy_out_1 = 0, // [TSP] Inversao Estrutural
-   es_buy_out_2 = 1, // [TSP] Desativado / Alvo Fixo
-   es_buy_out_3 = 2, // [TSP] Alvo Dinamico (Topo)
-   es_buy_out_4 = 3  // [TSP] Abortar Inversao Micro
+   es_buy_out_1 = 0, // Saída compra 
+   es_buy_out_2 = 1, // Sem sinal de saída
+   es_buy_out_3 = 2 // Desativado
   };
 
 enum e_sells_out
   {
-   es_sell_out_1 = 0, // [TSP] Inversao Estrutural
-   es_sell_out_2 = 1, // [TSP] Desativado / Alvo Fixo
-   es_sell_out_3 = 2, // [TSP] Alvo Dinamico (Fundo)
-   es_sell_out_4 = 3  // [TSP] Abortar Inversao Micro
+   es_sell_out_1 = 0, // Saída venda 
+   es_sell_out_2 = 1, // Sem sinal de saída
+   es_sell_out_3 = 2 // Desativado
   };
 
 enum e_saldo
@@ -290,39 +282,6 @@ enum e_saldo
    es_saldo_total = 0, // Financeiro
    es_saldo_perce = 1 // Percentual
   };
-//+------------------------------------------------------------------+
-struct s_tsp_pivot {
-   datetime time;
-   double price;
-   int type; // 1 = High, -1 = Low
-};
-
-struct s_tsp_context {
-   int trend_macro;
-   int trend_dominante;
-   int trend_estrutural;
-   int trend_setup;
-   int trend_confirm;
-   double str_last_high;
-   double str_last_low;
-   datetime str_time_high;
-   datetime str_time_low;
-   double macro_last_high;
-   datetime macro_time_high;
-   double macro_last_low;
-   datetime macro_time_low;
-   double dom_last_high;
-   datetime dom_time_high;
-   double dom_last_low;
-   datetime dom_time_low;
-};
-
-struct s_tsp_trigger {
-   bool active;
-   double high;
-   double low;
-   int type; // 1 = Compra, -1 = Venda
-};
 //+------------------------------------------------------------------+
 class GLOBAL
   {
@@ -338,19 +297,11 @@ protected:
    double                  _medio_tp, _medio_sl, _medio_pn;
    bool                    _pts_inout, _pts_cus, _pts_tp, _pts_sl, _pts_ac, _pts_af, _pts_pn, _ajustar, _pts_grad;
    double                  _boleta;
-   ulong                   _contas[10], _permitidas;
+   ulong                   _contas[4], _permitidas;
    datetime                _expiracao;
    bool                    _back, _demo, _contest, _real;
    int                     _max_buy_in, _max_buy_out, _max_sell_in, _max_sell_out, _vol_digitos;
    uint                    _ticks_deal, _ticks_count;
-
-   // Variaveis de Estado TSP
-   s_tsp_pivot             _tsp_pivots_str[]; // Pivots estruturais
-   s_tsp_pivot             _tsp_pivots_cfm[]; // Pivots confirmacao
-   int                     _tsp_pivot_str_count;
-   int                     _tsp_pivot_cfm_count;
-   s_tsp_context           _tsp_context;
-   s_tsp_trigger           _tsp_trigger;
 
 public:
    bool                    _operar, _minimizado, _atualizar, _visual, _teste;
@@ -496,24 +447,6 @@ protected:
    bool              check_filtro_barra(void);
    bool              check_procura_sinal(const bool compra, const bool saida, const datetime ultima);
 
-   // Funcoes TSP
-   void              tsp_update(void);
-   void              tsp_detectar_pivots(void);
-   void              tsp_draw_pivots(void);
-   void              tsp_draw_zones(void);
-   void              tsp_log_estrutural(void);
-   int               tsp_get_trend(ENUM_TIMEFRAMES tf, double &last_high, double &last_low, datetime &last_high_time, datetime &last_low_time);
-   void              tsp_draw_reference_lines(void);
-   bool              tsp_em_zona_compra(void);
-   bool              tsp_em_zona_venda(void);
-   bool              tsp_falha_compra(void);
-   bool              tsp_falha_venda(void);
-   int               tsp_calcular_score_compra(void);
-   int               tsp_calcular_score_venda(void);
-   bool              tsp_adx_favoravel(void);
-   bool              tsp_hilo_alta(void);
-   bool              tsp_hilo_baixa(void);
-
 public:
    double            normalizar(const double price);
    void              zeragem_compulsoria(void);
@@ -536,10 +469,10 @@ public:
 //+------------------------------------------------------------------+
 PROCESSAR in_pro;
 //+------------------------------------------------------------------+
-#define Robot "TSP_V1"
-#define Expert "TheWise Structural Premises V1"
-#property description "Expert Advisor TheWise Structural Premises V1"
-#property description "Autor: Rogerinho Ramos - Structural context, Operational premises"
+#define Robot "padrão base original_1746638762"
+#define Expert "TheWise-HiLo-V4"
+#property description "Expert Advisor TheWise-HiLo-V4"
+#property description "Criado com o construtor padrão base original em 07/05/2025 - 14:26:02"
 
 sinput group "--- PARAMETRIZAÇÃO INICIAL ---"
 sinput ulong m_magic = 1746638762; // Magic Number (ID)
@@ -555,8 +488,7 @@ input int m_alvos_check = 5; // Tempo para confirmar alvos (seg)
 input uint m_delay_ticks = 1000; // Atraso após envio de ordens (ms)
 
 sinput group "--- CONFIRMAÇÃO DE SINAIS ---"
-sinput string m_set = "Setup Padrão";
-string            g_set_name_display = "Iniciando..."; // Nome do setup
+sinput string m_set = "Setup Padrão"; // Nome do setup
 sinput e_buys_in m_compra_in = 0; // Sinal entrada compra
 sinput e_sells_in m_venda_in = 0; // Sinal entrada venda
 sinput e_buys_out m_compra_out = 0; // Sinal saída compra
@@ -747,76 +679,37 @@ input e_sn m_log = true; // Exibir log informativo
 input e_sn m_tarjas = true; // Exibir etiquetas nas ordens
 input e_sn m_layout = false; // Alterar layout do gráfico
 
-sinput group "--- [TSP] TIMEFRAMES HIERARQUICOS ---"
-input ENUM_TIMEFRAMES m_tf_macro      = PERIOD_W1;   // TF Macro (Vies)
-input ENUM_TIMEFRAMES m_tf_dominante  = PERIOD_D1;   // TF Dominante
-input ENUM_TIMEFRAMES m_tf_estrutural = PERIOD_H2;   // TF Estrutural
-input ENUM_TIMEFRAMES m_tf_setup      = PERIOD_M10;  // TF Setup
-input ENUM_TIMEFRAMES m_tf_confirm    = PERIOD_M3;   // TF Confirmacao
+sinput group "--- [3] RSI ---"
+input int m_period_3 = 14; // Período
+input ENUM_APPLIED_PRICE m_price_3 = PRICE_CLOSE; // Tipo de preço
+input int m_limitesuperior = 50; // Limite Superior
+input int m_limiteinferior = 50; // Limite Inferior
 
-sinput group "--- [TSP] DETECCAO ESTRUTURAL ---"
-input int    m_tsp_fractal_bars   = 3;     // Barras p/ pivo (esq/dir)
-input int    m_tsp_pivot_lookback = 100;   // Barras historico p/ pivos
-input int    m_tsp_pivot_count    = 10;    // Qtd pivos armazenados
 
-sinput group "--- [TSP] PULLBACK / ZONAS ---"
-input double m_tsp_fibo_sup       = 50.0;  // Zona superior (%)
-input double m_tsp_fibo_inf       = 100.0; // Zona inferior (%)
-input double m_tsp_zona_tol       = 20;    // Tolerancia zona (pts)
 
-sinput group "--- [TSP] SCORE ---"
-input int    m_tsp_score_min      = 7;     // Score minimo para entrada
-input int    m_tsp_w_macro        = 3;     // Peso: Macro alinhado
-input int    m_tsp_w_dominante    = 3;     // Peso: Dominante alinhado
-input int    m_tsp_w_estrut       = 2;     // Peso: Estrutural alinhado
-input int    m_tsp_w_setup        = 2;     // Peso: Setup alinhado
-input int    m_tsp_w_falha        = 3;     // Peso: Falha confirmada
-input int    m_tsp_w_adx          = 1;     // Peso: ADX favoravel
-input int    m_tsp_w_hilo         = 1;     // Peso: HiLo (se ativado)
-input int    m_tsp_penalidade     = -3;    // Penalidade contra dominante
+sinput group "--- [4] HiLo V1 ---"
+input double m_ind_4_param_1 = 8; // Período HiLo
 
-sinput group "--- [TSP] FILTROS OPCIONAIS ---"
-input e_sn   m_tsp_usar_adx       = true;  // Usar ADX como filtro
-input int    m_tsp_adx_period     = 14;    // Periodo ADX
-input double m_tsp_adx_min        = 18.0;  // ADX minimo
-input e_sn   m_tsp_usar_hilo      = false; // Usar HiLo confirmacao
-input double m_tsp_hilo_period    = 8;     // Periodo HiLo (se ativado)
+sinput group "--- [5] ADX / JANELA ---"
+input int m_janela_candles = 3; // Janela máxima em candles fechados
+input int m_period_5 = 14; // Período ADX
+input double m_adx_min = 18; // ADX mínimo
+input e_sn m_mostrar_adx = false; // Exibir ADX no gráfico
 
-sinput group "--- [TSP] VISUAL ---"
-input e_sn   m_tsp_draw_pivots    = true;  // Desenhar Pivos (Linha Amarela)
-input e_sn   m_tsp_draw_zones     = true;  // Desenhar Zonas (Fibo Verde/Vermelha)
-input e_sn   m_tsp_draw_lines_str = true;  // Desenhar Linhas Estruturais (Alvo)
-input e_sn   m_tsp_draw_lines_dom = true;  // Desenhar Linhas Dominantes (D1)
-input e_sn   m_tsp_draw_lines_mac = false; // Desenhar Linhas Macro (W1)
-input e_sn   m_tsp_show_score     = true;  // Mostrar score no painel
-input color  m_tsp_cor_alta       = clrLimeGreen;  // Cor alta
-input color  m_tsp_cor_baixa      = clrTomato;     // Cor baixa
-input color  m_tsp_cor_zona       = clrDodgerBlue; // Cor zonas
-input color  m_tsp_cor_pivot      = clrGold;       // Cor pivos
 bool CONTROLE::check_indicadores(void) { 
 iniciar_handles();
 ENUM_TIMEFRAMES tf = (MQLInfoInteger(MQL_TESTER)) ? m_timeframe : _Period;
 
-// ADX (opcional)
-if(m_tsp_usar_adx) {
-   _handle_5=iADX(_Symbol,tf,m_tsp_adx_period);
-   if(_handle_5 == INVALID_HANDLE) return false;
-}
+_handle_3=iRSI(_Symbol,tf,m_period_3,m_price_3);
+if(_handle_3 == INVALID_HANDLE) return false;
 
-// HiLo (opcional)
-if(m_tsp_usar_hilo) {
-   _handle_4=iCustom(_Symbol,tf,"HiLo V1.ex5",m_tsp_hilo_period);
-   if(_handle_4 == INVALID_HANDLE) return false;
-}
+_handle_4=iCustom(_Symbol,tf,"HiLo V1.ex5",m_ind_4_param_1);
+if(_handle_4 == INVALID_HANDLE) return false;
 
-// TSP: Inicializar arrays de pivos
-ArrayResize(_tsp_pivots_str, m_tsp_pivot_count);
-ArrayResize(_tsp_pivots_cfm, m_tsp_pivot_count);
-_tsp_pivot_str_count = 0;
-_tsp_pivot_cfm_count = 0;
-_tsp_trigger.active = false;
+_handle_5=iADX(_Symbol,tf,m_period_5);
+if(_handle_5 == INVALID_HANDLE) return false;
 
-int window[8] = {-1,-1,-1,-1,-1,-1,-1,-1};
+int window[8] = {-1,-1,1,0,(m_mostrar_adx ? 2 : -1),-1,-1,-1};
 check_windows(window);
 return true;}
 
@@ -830,66 +723,162 @@ bool EXECUCAO::get_indicator_value(const int handle, const int buffer, const int
    return true;
   }
 
+bool EXECUCAO::check_hilo_janela_compra(int &sinal)
+  {
+// Janela de oportunidade para COMPRA (Case 4).
+// A virada do HiLo deve ter ocorrido em até m_janela_candles candles atras
+// E o HiLo deve ter mantido a direcao (alta) em todos os candles desde entao.
+// Se o HiLo reverteu no meio do caminho, o sinal e descartado.
+   int janela = MathMax(1,m_janela_candles);
+
+   for(int shift=1; shift<=janela; shift++)
+     {
+      int sinal_local = sinal;
+
+      // Verifica virada: [shift+1] nao era alta, [shift] virou para alta
+      bool virada =
+         check_sinal(sinal_local,44,shift+1,0,1,5,1,0,0,1) &&
+         check_sinal(sinal_local,44,shift,0,1,4,1,0,0,1);
+
+      if(!virada) continue;
+
+      // Verifica continuidade: todos os candles [shift-1] ate [1] ficaram em alta
+      bool continuidade = true;
+      for(int k=shift-1; k>=1; k--)
+        {
+         int s_temp = sinal_local;
+         if(!check_sinal(s_temp,44,k,0,1,4,1,0,0,1))
+           {
+            continuidade = false;
+            break;
+           }
+        }
+
+      if(continuidade)
+        {
+         if(sinal_local > 0)
+            sinal = sinal_local;
+         else if(sinal <= 0)
+            sinal = 1;
+         return true;
+        }
+     }
+
+   return false;
+  }
+
+bool EXECUCAO::check_hilo_janela_venda(int &sinal)
+  {
+// Janela de oportunidade para VENDA (Case 4).
+// A virada do HiLo deve ter ocorrido em ate m_janela_candles candles atras
+// E o HiLo deve ter mantido a direcao (baixa) em todos os candles desde entao.
+// Se o HiLo reverteu no meio do caminho, o sinal e descartado.
+   int janela = MathMax(1,m_janela_candles);
+
+   for(int shift=1; shift<=janela; shift++)
+     {
+      int sinal_local = sinal;
+
+      // Verifica virada: [shift+1] nao era baixa, [shift] virou para baixa
+      bool virada =
+         check_sinal(sinal_local,44,shift+1,0,1,5,1,1,0,1) &&
+         check_sinal(sinal_local,44,shift,0,1,4,1,1,0,1);
+
+      if(!virada) continue;
+
+      // Verifica continuidade: todos os candles [shift-1] ate [1] ficaram em baixa
+      bool continuidade = true;
+      for(int k=shift-1; k>=1; k--)
+        {
+         int s_temp = sinal_local;
+         if(!check_sinal(s_temp,44,k,0,1,4,1,1,0,1))
+           {
+            continuidade = false;
+            break;
+           }
+        }
+
+      if(continuidade)
+        {
+         if(sinal_local > 0)
+            sinal = sinal_local;
+         else if(sinal <= 0)
+            sinal = 1;
+         return true;
+        }
+     }
+
+   return false;
+  }
+
+bool EXECUCAO::check_adx_minimo(void)
+  {
+   double adx = 0.0;
+   if(!get_indicator_value(_handle_5,0,1,adx)) return false;
+   return (adx >= m_adx_min);
+  }
+
 bool EXECUCAO::check_entrada_compra(void) { int sinal = 0; 
-tsp_update();
-switch(m_compra_in) {
-   case 0: // Tendencia Estrutural
-      if(_tsp_context.trend_estrutural == 1) { sinal = 1; return true; }
-      break;
-   case 1: // Tendencia + Pullback
-      if(_tsp_context.trend_estrutural == 1 && tsp_em_zona_compra()) { sinal = 1; return true; }
-      break;
-   case 2: // Tendencia + Pullback + Falha
-      if(_tsp_context.trend_estrutural == 1 && tsp_em_zona_compra() && tsp_falha_compra()) { sinal = 1; return true; }
-      break;
-   case 3: // Score Contextual
-      if(tsp_calcular_score_compra() >= m_tsp_score_min) { sinal = 1; return true; }
-      break;
-   case 4: // Score + Pullback
-      if(tsp_calcular_score_compra() >= m_tsp_score_min && tsp_em_zona_compra()) { sinal = 1; return true; }
-      break;
-   case 5: // Score + Pullback + Falha
-      if(tsp_calcular_score_compra() >= m_tsp_score_min && tsp_em_zona_compra() && tsp_falha_compra()) { sinal = 1; return true; }
-      break;
-   case 6: // Score + ADX
-      if(tsp_calcular_score_compra() >= m_tsp_score_min && tsp_adx_favoravel()) { sinal = 1; return true; }
-      break;
-   case 7: // Manual
-      break;
-}
+
+if(check_canais_compra_in(sinal)) if(check_oscilar_compra_in(sinal)) switch(m_compra_in) { case 0:if((check_cruzar_compra_in(sinal)))
+ if((check_sinal(sinal,44,2,0,1,5,1,0,0,1) && check_sinal(sinal,44,1,0,1,4,1,0,0,1))) if(sinal > 0) return true; 
+break;
+ case 1:if((check_cruzar_compra_in(sinal)))
+ if((check_sinal(sinal,44,2,0,1,5,1,0,0,1) && check_sinal(sinal,44,1,0,1,4,1,0,0,1)) && (check_sinal(sinal,30,1,0,1,0,1,m_limitesuperior,0,1))) if(sinal > 0) return true; 
+break;
+ case 2:if((check_cruzar_compra_in(sinal))) if(sinal > 0) return true; 
+break;
+ case 3:if((check_cruzar_compra_in(sinal)))
+ if((check_sinal(sinal,44,2,0,1,5,1,0,0,1) && check_sinal(sinal,44,1,0,1,4,1,0,0,1)) && check_adx_minimo()) if(sinal > 0) return true; 
+break;
+ case 4:if((check_cruzar_compra_in(sinal)))
+ if(check_hilo_janela_compra(sinal) && check_adx_minimo()) if(sinal > 0) return true;
+break;
+} 
+
  return false;} 
 bool EXECUCAO::check_saida_compra(void) { int sinal = 0; 
-tsp_update();
-double p = SymbolInfoDouble(_Symbol, SYMBOL_BID);
-switch(m_compra_out) {
-   case 0: // Inversao Estrutural
-      if(_tsp_context.trend_estrutural == -1) { sinal = 1; return true; } break;
-   case 1: break; // Desativado / Alvo Fixo
-   case 2: // Alvo Dinamico (Topo)
-      if(p >= _tsp_context.str_last_high && _tsp_context.str_last_high > 0) { sinal = 1; return true; } break;
-   case 3: // Abortar Inversao Micro
-      if(_tsp_context.trend_confirm == -1) { sinal = 1; return true; } break;
-}
+
+if(check_canais_compra_out(sinal)) if(check_oscilar_compra_out(sinal)) switch(m_compra_out) { case 0:if((check_cruzar_compra_out(sinal)))
+ if((check_sinal(sinal,44,2,0,1,5,1,1,0,1) && check_sinal(sinal,44,1,0,1,4,1,1,0,1))) if(sinal > 0) return true; 
+break;
+ case 1:if((check_cruzar_compra_out(sinal))) if(sinal > 0) return true; 
+break;
+ case 2:if((check_cruzar_compra_out(sinal))) if(sinal > 0) return true; 
+break;
+} 
+
  return false;} 
 bool EXECUCAO::check_entrada_venda(void) { int sinal = 0; 
-tsp_update();
-switch(m_venda_in) {
-   case 0: if(_tsp_context.trend_estrutural == -1) { sinal = 1; return true; } break;
-   case 1: if(_tsp_context.trend_estrutural == -1 && tsp_em_zona_venda()) { sinal = 1; return true; } break;
-   case 2: if(_tsp_context.trend_estrutural == -1 && tsp_em_zona_venda() && tsp_falha_venda()) { sinal = 1; return true; } break;
-   case 3: if(tsp_calcular_score_venda() >= m_tsp_score_min) { sinal = 1; return true; } break;
-   case 4: if(tsp_calcular_score_venda() >= m_tsp_score_min && tsp_em_zona_venda()) { sinal = 1; return true; } break;
-   case 5: if(tsp_calcular_score_venda() >= m_tsp_score_min && tsp_em_zona_venda() && tsp_falha_venda()) { sinal = 1; return true; } break;
-   case 6: if(tsp_calcular_score_venda() >= m_tsp_score_min && tsp_adx_favoravel()) { sinal = 1; return true; } break;
-   case 7: break;
-}
+
+if(check_canais_venda_in(sinal)) if(check_oscilar_venda_in(sinal)) switch(m_venda_in) { case 0:if((check_cruzar_venda_in(sinal)))
+ if((check_sinal(sinal,44,2,0,1,5,1,1,0,1) && check_sinal(sinal,44,1,0,1,4,1,1,0,1))) if(sinal > 0) return true; 
+break;
+ case 1:if((check_cruzar_venda_in(sinal)))
+ if((check_sinal(sinal,44,2,0,1,5,1,1,0,1) && check_sinal(sinal,44,1,0,1,4,1,1,0,1)) && (check_sinal(sinal,30,1,0,1,1,1,m_limiteinferior,0,1))) if(sinal > 0) return true; 
+break;
+ case 2:if((check_cruzar_venda_in(sinal))) if(sinal > 0) return true; 
+break;
+ case 3:if((check_cruzar_venda_in(sinal)))
+ if((check_sinal(sinal,44,2,0,1,5,1,1,0,1) && check_sinal(sinal,44,1,0,1,4,1,1,0,1)) && check_adx_minimo()) if(sinal > 0) return true; 
+break;
+ case 4:if((check_cruzar_venda_in(sinal)))
+ if(check_hilo_janela_venda(sinal) && check_adx_minimo()) if(sinal > 0) return true;
+break;
+} 
+
  return false;} 
 bool EXECUCAO::check_saida_venda(void) { int sinal = 0; 
-switch(m_venda_out) {
-   case 0: tsp_update(); if(_tsp_context.trend_estrutural == 1) { sinal = 1; return true; } break;
-   case 1: break;
-   case 2: break;
-}
+
+if(check_canais_venda_out(sinal)) if(check_oscilar_venda_out(sinal)) switch(m_venda_out) { case 0:if((check_cruzar_venda_out(sinal)))
+ if((check_sinal(sinal,44,2,0,1,5,1,0,0,1) && check_sinal(sinal,44,1,0,1,4,1,0,0,1))) if(sinal > 0) return true; 
+break;
+ case 1:if((check_cruzar_venda_out(sinal))) if(sinal > 0) return true; 
+break;
+ case 2:if((check_cruzar_venda_out(sinal))) if(sinal > 0) return true; 
+break;
+} 
+
  return false;} 
 bool EXECUCAO::check_canais_compra_in(int &sinal){
  if(sinal >= 0) return true; 
@@ -966,8 +955,11 @@ _demo = true;
 _contest = true;
 _real = true;
 _permitidas = 0;
-for(int i=0; i<10; i++) _contas[i] = 0;
-_expiracao = D'2026.06.16 23:59:59';
+_contas[0] = 0;
+_contas[1] = 0;
+_contas[2] = 0;
+_contas[3] = 0;
+_expiracao = 0;
 _max_buy_in = 2;
 _max_buy_out = 2;
 _max_sell_in = 2;
@@ -1493,23 +1485,12 @@ bool GRAFICO::minimizar_painel(void)
    string info = StringFormat("%s %s - %d",StringSubstr(EnumToString((ENUM_ACCOUNT_TRADE_MODE)AccountInfoInteger(ACCOUNT_TRADE_MODE)),19),
                               StringSubstr(EnumToString((ENUM_ACCOUNT_MARGIN_MODE)AccountInfoInteger(ACCOUNT_MARGIN_MODE)),27),m_magic);
 
-   
-   // Forçar nome do setup na partida
-   string gat_ini = (m_compra_in == 2) ? "Sniper" : "TSP";
-   g_set_name_display = StringFormat("%s %s - %s", _Symbol, StringSubstr(EnumToString(_Period),7), gat_ini);
-
-      set_obj(OBJ_RECTANGLE_LABEL,_prefix_painel+"_FUNDO_BOLETA",7,422,398,96,1,C'35,45,75',C'60,70,100',NULL,NULL,NULL,NULL);
-   set_obj(OBJ_LABEL,_prefix_painel+"_BUFF_ICON",239,117,0,0,0,NULL,NULL,"Webdings",10,"i",clrGold);
-   ObjectSetInteger(0,_prefix_painel+"_BUFF_ICON",OBJPROP_ZORDER,15);
    set_obj(OBJ_RECTANGLE_LABEL,_prefix_painel+"_FUNDO_PAINEL_0",5,20,402,64,1,C'8,15,29',C'30,41,59',NULL,NULL,NULL,NULL);
    set_obj(OBJ_RECTANGLE_LABEL,_prefix_painel+"_FUNDO_PAINEL_1",7,36,398,44,0,C'10,19,35',C'10,19,35',NULL,NULL,NULL,NULL);
    set_obj(OBJ_LABEL,_prefix_painel+"_MAGIC",150,24,0,0,0,NULL,NULL,"Bahnschrift",07,info,C'148,163,184');
    set_obj(OBJ_LABEL,_prefix_painel+"_NOME_ROBO",14,38,0,0,0,NULL,NULL,"Bahnschrift Bold",13,Expert,C'245,158,11');
    set_obj(OBJ_LABEL,_prefix_painel+"_SETUP",14,60,0,0,0,NULL,NULL,"Bahnschrift",08,m_set,C'96,165,250');
-   
-    set_obj(OBJ_BUTTON,_prefix_painel+"_BOL_TEMA",360,22,20,18,0,C'30,41,59',clrNONE,"Arial",10,"🎨",clrWhite);
-    ObjectSetInteger(0,_prefix_painel+"_BOL_TEMA",OBJPROP_ZORDER,20);
-    set_obj(OBJ_BUTTON,_prefix_painel+"_BOL_MINIMIZAR",379,25,22,14,0,C'51,65,85',C'71,85,105',"Bahnschrift Bold",07,"+",C'226,232,240');
+   set_obj(OBJ_BUTTON,_prefix_painel+"_BOL_MINIMIZAR",379,25,22,14,0,C'51,65,85',C'71,85,105',"Bahnschrift Bold",07,"+",C'226,232,240');
 
    _minimizado = true;
    return true;
@@ -1593,37 +1574,20 @@ bool GRAFICO::criar_painel(void)
    string info = StringFormat("%s %s - %d",StringSubstr(EnumToString((ENUM_ACCOUNT_TRADE_MODE)AccountInfoInteger(ACCOUNT_TRADE_MODE)),19),
                               StringSubstr(EnumToString((ENUM_ACCOUNT_MARGIN_MODE)AccountInfoInteger(ACCOUNT_MARGIN_MODE)),27),m_magic);
 
-   
-   // Forçar nome do setup na partida
-   string gat_ini = (m_compra_in == 2) ? "Sniper" : "TSP";
-   g_set_name_display = StringFormat("%s %s - %s", _Symbol, StringSubstr(EnumToString(_Period),7), gat_ini);
-
-      set_obj(OBJ_RECTANGLE_LABEL,_prefix_painel+"_FUNDO_BOLETA",7,422,398,96,1,C'35,45,75',C'60,70,100',NULL,NULL,NULL,NULL);
-   set_obj(OBJ_LABEL,_prefix_painel+"_BUFF_ICON",239,117,0,0,0,NULL,NULL,"Webdings",10,"i",clrGold);
-   ObjectSetInteger(0,_prefix_painel+"_BUFF_ICON",OBJPROP_ZORDER,15);
    set_obj(OBJ_RECTANGLE_LABEL,_prefix_painel+"_FUNDO_PAINEL_0",5,20,408,510,1,C'8,15,29',C'30,41,59',NULL,NULL,NULL,NULL);
-   ObjectSetInteger(0,_prefix_painel+"_FUNDO_PAINEL_0",OBJPROP_BACK,false);
-   ObjectSetInteger(0,_prefix_painel+"_FUNDO_PAINEL_0",OBJPROP_ZORDER,-20);
    set_obj(OBJ_RECTANGLE_LABEL,_prefix_painel+"_FUNDO_PAINEL_1",7,35,404,62,0,C'10,19,35',C'10,19,35',NULL,NULL,NULL,NULL);
-   
-   ObjectSetInteger(0,_prefix_painel+"_FUNDO_BOLETA",OBJPROP_ZORDER,0);
    set_obj(OBJ_RECTANGLE_LABEL,_prefix_painel+"_FUNDO_PAINEL_2",10,106,392,44,1,C'14,24,42',C'39,52,73',NULL,NULL,NULL,NULL);
    set_obj(OBJ_RECTANGLE_LABEL,_prefix_painel+"_FUNDO_PAINEL_3",10,160,392,70,1,C'14,24,42',C'39,52,73',NULL,NULL,NULL,NULL);
    set_obj(OBJ_RECTANGLE_LABEL,_prefix_painel+"_FUNDO_PAINEL_4",10,238,186,120,1,C'12,22,40',C'39,52,73',NULL,NULL,NULL,NULL);
    set_obj(OBJ_RECTANGLE_LABEL,_prefix_painel+"_FUNDO_PAINEL_5",206,238,196,120,1,C'12,22,40',C'39,52,73',NULL,NULL,NULL,NULL);
    set_obj(OBJ_LABEL,_prefix_painel+"_NOME_ROBO",14,38,0,0,0,NULL,NULL,"Bahnschrift Bold",13,Expert,C'245,158,11');
    set_obj(OBJ_LABEL,_prefix_painel+"_OPERACIONAL",14,60,0,0,0,NULL,NULL,"Bahnschrift",09,msg,(_operar ? C'74,222,128' : C'248,113,113'));
-   set_obj(OBJ_LABEL,_prefix_painel+"_SETUP",14,78,0,0,0,NULL,NULL,"Bahnschrift",08,g_set_name_display,C'96,165,250');
+   set_obj(OBJ_LABEL,_prefix_painel+"_SETUP",14,78,0,0,0,NULL,NULL,"Bahnschrift",08,m_set,C'96,165,250');
    set_obj(OBJ_LABEL,_prefix_painel+"_MAGIC",150,24,0,0,0,NULL,NULL,"Bahnschrift",07,info,C'148,163,184');
-   set_obj(OBJ_LABEL,_prefix_painel+"_LIGA_DESLIGA",14,115,0,0,0,NULL,NULL,"Bahnschrift Bold",09,"</ Rogerinho Ramos",C'148,163,184');
-    set_obj(OBJ_BUTTON,_prefix_painel+"_BOL_ON",155,114,40,22,1,cor_on,C'15,23,42',"Bahnschrift Bold",08,"LIG",C'248,250,252',_operar);
-    set_obj(OBJ_BUTTON,_prefix_painel+"_BOL_OFF",200,114,40,22,1,cor_off,C'15,23,42',"Bahnschrift Bold",08,"DES",C'248,250,252',!_operar);
-    
-   // Ícone de Licença Colorido
-   
-    // Garantir que fique na frente
-
-   set_obj(OBJ_BUTTON,_prefix_painel+"_BOL_BUFFERS",245,114,145,22,1,C'30,64,175',C'59,130,246',"Bahnschrift SemiBold",07,"   Expira: 16/06/2026",C'226,232,240',false);
+   set_obj(OBJ_LABEL,_prefix_painel+"_LIGA_DESLIGA",22,115,0,0,0,NULL,NULL,"Bahnschrift Bold",09,"LIGA/DESLIGA",C'226,232,240');
+   set_obj(OBJ_BUTTON,_prefix_painel+"_BOL_ON",170,114,48,22,1,cor_on,C'15,23,42',"Bahnschrift Bold",08,"LIG",C'248,250,252',_operar);
+   set_obj(OBJ_BUTTON,_prefix_painel+"_BOL_OFF",225,114,48,22,1,cor_off,C'15,23,42',"Bahnschrift Bold",08,"DES",C'248,250,252',!_operar);
+   set_obj(OBJ_BUTTON,_prefix_painel+"_BOL_BUFFERS",286,114,104,22,1,C'30,64,175',C'59,130,246',"Bahnschrift SemiBold",07,"LER BUFFERS",C'226,232,240',false);
    set_obj(OBJ_LABEL,_prefix_painel+"_POS",24,167,0,0,0,NULL,NULL,"Bahnschrift Bold",08,"STATUS",C'226,232,240');
    set_obj(OBJ_EDIT,_prefix_painel+"_POS_VL",82,164,104,22,1,C'30,41,59',C'39,52,73',"Bahnschrift Bold",08,"ZERADO",C'226,232,240');
    set_obj(OBJ_LABEL,_prefix_painel+"_LOT",210,167,0,0,0,NULL,NULL,"Bahnschrift Bold",08,"VOLUME",C'226,232,240');
@@ -1669,49 +1633,9 @@ bool GRAFICO::criar_painel(void)
    set_obj(OBJ_BUTTON,_prefix_painel+"_BOL_MIN",142,430,20,20,1,C'148,163,184',C'71,85,105',"Bahnschrift Bold",08,"-",C'15,23,42');
    set_obj(OBJ_BUTTON,_prefix_painel+"_BOL_INVERTER",10,476,192,30,1,C'99,102,241',C'67,56,202',"Bahnschrift Bold",08,"INVERTER",C'248,250,252');
    set_obj(OBJ_BUTTON,_prefix_painel+"_BOL_ZERAR",210,476,192,30,1,C'245,158,11',C'180,83,9',"Bahnschrift Bold",08,"ZERAR",C'248,250,252');
-   
-    set_obj(OBJ_BUTTON,_prefix_painel+"_BOL_TEMA",360,22,20,18,0,C'30,41,59',clrNONE,"Arial",10,"🎨",clrWhite);
-    ObjectSetInteger(0,_prefix_painel+"_BOL_TEMA",OBJPROP_ZORDER,20);
-    set_obj(OBJ_BUTTON,_prefix_painel+"_BOL_MINIMIZAR",379,25,22,14,1,C'51,65,85',C'71,85,105',"Bahnschrift Bold",07,"-",C'226,232,240');
-
-
-
-
-
-
+   set_obj(OBJ_BUTTON,_prefix_painel+"_BOL_MINIMIZAR",379,25,22,14,1,C'51,65,85',C'71,85,105',"Bahnschrift Bold",07,"-",C'226,232,240');
 
    _minimizado = false;
-
-   
-   // --- MÓDULO BOLETA 3D ---
-   string b_box = "RR_MOLDURA_BOLETA";
-   string b_glow = _prefix_painel+"_BOX_GLOW";
-   
-   // Camada 1: Brilho/Contorno (Um pouco maior)
-   ObjectDelete(0, b_glow);
-   ObjectCreate(0, b_glow, OBJ_RECTANGLE_LABEL, 0, 0, 0);
-   ObjectSetInteger(0, b_glow, OBJPROP_XDISTANCE, 6);
-   ObjectSetInteger(0, b_glow, OBJPROP_YDISTANCE, 421);
-   ObjectSetInteger(0, b_glow, OBJPROP_XSIZE, 400);
-   ObjectSetInteger(0, b_glow, OBJPROP_YSIZE, 92);
-   ObjectSetInteger(0, b_glow, OBJPROP_BGCOLOR, C'60,70,90'); // Cor do Brilho
-   ObjectSetInteger(0, b_glow, OBJPROP_BORDER_TYPE, BORDER_FLAT);
-   ObjectSetInteger(0, b_glow, OBJPROP_ZORDER, 0);
-   ObjectSetInteger(0, b_glow, OBJPROP_BACK, true);
-
-   // Camada 2: Fundo do Módulo
-   ObjectDelete(0, b_box);
-   ObjectCreate(0, b_box, OBJ_RECTANGLE_LABEL, 0, 0, 0);
-   ObjectSetInteger(0, b_box, OBJPROP_XDISTANCE, 8);
-   ObjectSetInteger(0, b_box, OBJPROP_YDISTANCE, 423);
-   ObjectSetInteger(0, b_box, OBJPROP_XSIZE, 396);
-   ObjectSetInteger(0, b_box, OBJPROP_YSIZE, 88);
-   ObjectSetInteger(0, b_box, OBJPROP_BGCOLOR, C'15,25,45'); // Fundo Escuro
-   ObjectSetInteger(0, b_box, OBJPROP_BORDER_TYPE, BORDER_FLAT);
-   ObjectSetInteger(0, b_box, OBJPROP_ZORDER, 1);
-   ObjectSetInteger(0, b_box, OBJPROP_BACK, true);
-   // -------------------------
-
    return true;
   }
 //+------------------------------------------------------------------+
@@ -1899,48 +1823,8 @@ void GRAFICO::update_painel_descritivo(const string msg)
    if(!_visual || !m_painel || _minimizado)
       return;
 
-   // Atualizar Texto
    ObjectSetString(0,_prefix_painel+"_OPERACIONAL",OBJPROP_TEXT,msg);
-   
-   // Corrigir Cores de Status
-   color cor_status = (_operar ? C'74,222,128' : C'248,113,113');
-   if(msg == "Expert habilitado" || msg == "Em operação" || msg == "Procurando novas entradas") 
-      cor_status = C'74,222,128';
-   
-   ObjectSetInteger(0,_prefix_painel+"_OPERACIONAL",OBJPROP_COLOR,cor_status);
-
-   // --- ELEMENTOS PREMIUM TSP (FORÇA BRUTA) ---
-   string b_box = "RR_MOLDURA_BOLETA";
-   string b_line = "RR_LINHA_DIVISORIA";
-
-   // Linha de Separação
-   ObjectDelete(0, b_line);
-   if(ObjectCreate(0, b_line, OBJ_RECTANGLE_LABEL, 0, 0, 0)) {
-      ObjectSetInteger(0, b_line, OBJPROP_XDISTANCE, 10);
-      ObjectSetInteger(0, b_line, OBJPROP_YDISTANCE, 415);
-      ObjectSetInteger(0, b_line, OBJPROP_XSIZE, 392);
-      ObjectSetInteger(0, b_line, OBJPROP_YSIZE, 1);
-      ObjectSetInteger(0, b_line, OBJPROP_BGCOLOR, C'80,90,110'); // Mais claro para ver
-      ObjectSetInteger(0, b_line, OBJPROP_BORDER_TYPE, BORDER_FLAT);
-      ObjectSetInteger(0, b_line, OBJPROP_ZORDER, 5);
-   }
-
-   // Box da Boleta (Sempre Recriar com Contraste)
-   ObjectDelete(0, b_box);
-   if(ObjectCreate(0, b_box, OBJ_RECTANGLE_LABEL, 0, 0, 0)) {
-      ObjectSetInteger(0, b_box, OBJPROP_XDISTANCE, 7);
-      ObjectSetInteger(0, b_box, OBJPROP_YDISTANCE, 418);
-      ObjectSetInteger(0, b_box, OBJPROP_XSIZE, 398);
-      ObjectSetInteger(0, b_box, OBJPROP_YSIZE, 96);
-      ObjectSetInteger(0, b_box, OBJPROP_BGCOLOR, C'18,28,48'); // Um pouco mais claro que o fundo
-      ObjectSetInteger(0, b_box, OBJPROP_BORDER_COLOR, C'70,80,100'); // Borda visível
-      ObjectSetInteger(0, b_box, OBJPROP_BORDER_TYPE, BORDER_FLAT);
-      ObjectSetInteger(0, b_box, OBJPROP_BACK, false);
-      ObjectSetInteger(0, b_box, OBJPROP_ZORDER, 2); // Acima do fundo (-20)
-      ObjectSetInteger(0, b_box, OBJPROP_HIDDEN, false);
-   }
   }
-
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -2153,7 +2037,7 @@ void GRAFICO::gerenciar_linhas(const s_position &pos, const s_ordem &ord, const 
          if(i <= 9)
             cor = (pos.volume > 0.00) ? clrAqua : clrSalmon;
          else
-            cor = (pos.volume > 0.00) ? clrTomato : clrBlue;
+            cor = (pos.volume > 0.00) ? clrRed : clrBlue;
 
          if(i >= 0 && i <= 4)
             txt = "Aumento (F"+IntegerToString(i+1)+") ";
@@ -4767,7 +4651,7 @@ void EXECUCAO::confirmar_parciais(const double pos, const double price, const do
                   else
                      filtro_log("Falha na execução total da parcial "+nome);
 
-               color cor = (pos < 0.00) ? clrBlue : clrTomato;
+               color cor = (pos < 0.00) ? clrBlue : clrRed;
                string txt = ("Parcial (P"+id+") "+DoubleToString(vol,_vol_digitos));
                atualizar_linha(name,txt,parcial,cor);
               }
@@ -5219,7 +5103,7 @@ void PROCESSAR::desligando(void)
 
    ChartSetInteger(0,CHART_SHOW_TRADE_LEVELS,true);
    ChartSetInteger(0,CHART_DRAG_TRADE_LEVELS,true);
-   ChartSetInteger(0,CHART_COLOR_STOP_LEVEL,clrTomato);
+   ChartSetInteger(0,CHART_COLOR_STOP_LEVEL,clrRed);
    ChartSetInteger(0,CHART_COLOR_VOLUME,clrLimeGreen);
    ChartRedraw();
 
@@ -5391,7 +5275,6 @@ int OnInit(void)
       return INIT_FAILED;
      }
 
-   Print(">>> PAINEL ATUALIZADO V10");
    return INIT_SUCCEEDED;
   }
 //+------------------------------------------------------------------+
@@ -5435,385 +5318,3 @@ void OnTrade()
    in_pro._atualizar = true;
   }
 //+------------------------------------------------------------------+
-
-//+------------------------------------------------------------------+
-//| [TSP] MOTOR ESTRUTURAL (FASE 2)                                  |
-//+------------------------------------------------------------------+
-void EXECUCAO::tsp_update(void) {
-   // Lógica de Nome de Setup Dinâmico
-   string g_gatilho = "";
-   switch(m_compra_in) {
-      case 0: g_gatilho = "Tendencia"; break;
-      case 1: g_gatilho = "Pullback"; break;
-      case 2: g_gatilho = "Sniper"; break;
-      case 3: g_gatilho = "Score"; break;
-      case 4: g_gatilho = "Score+Zona"; break;
-      case 5: g_gatilho = "Score+Zona+Falha"; break;
-      case 6: g_gatilho = "Score+ADX"; break;
-      default: g_gatilho = "TSP"; break;
-   }
-   string auto_name = StringFormat("%s %s - %s", _Symbol, StringSubstr(EnumToString(_Period),7), g_gatilho);
-   g_set_name_display = (m_set == "Setup Padrão" || m_set == "") ? auto_name : m_set;
-
-
-   // 1. Atualizar pivos estruturais (H2) para o desenho visual e zonas de pullback
-   tsp_detectar_pivots();
-   
-   // 2. Classificar tendencia de TODOS os 5 Timeframes hierarquicos
-   double h = 0, l = 0;
-   datetime d1, d2;
-   _tsp_context.trend_macro      = tsp_get_trend(m_tf_macro, _tsp_context.macro_last_high, _tsp_context.macro_last_low, _tsp_context.macro_time_high, _tsp_context.macro_time_low);
-   _tsp_context.trend_dominante  = tsp_get_trend(m_tf_dominante, _tsp_context.dom_last_high, _tsp_context.dom_last_low, _tsp_context.dom_time_high, _tsp_context.dom_time_low);
-   _tsp_context.trend_estrutural = tsp_get_trend(m_tf_estrutural, _tsp_context.str_last_high, _tsp_context.str_last_low, _tsp_context.str_time_high, _tsp_context.str_time_low);
-   _tsp_context.trend_setup      = tsp_get_trend(m_tf_setup, h, l, d1, d2);
-   _tsp_context.trend_confirm    = tsp_get_trend(m_tf_confirm, h, l, d1, d2);
-   
-   tsp_draw_pivots();
-   tsp_draw_zones();
-   tsp_draw_reference_lines();
-   tsp_log_estrutural();
-
-   // Forçar Posicionamento Premium
-   ObjectSetInteger(0,_prefix_painel+"_BOL_ON",OBJPROP_XDISTANCE,145);
-   ObjectSetInteger(0,_prefix_painel+"_BOL_OFF",OBJPROP_XDISTANCE,190);
-   ObjectSetInteger(0,_prefix_painel+"_BOL_BUFFERS",OBJPROP_XDISTANCE,235);
-
-}
-
-void EXECUCAO::tsp_detectar_pivots(void) {
-   // Logica simplificada de deteccao de fractais
-   ENUM_TIMEFRAMES tf = m_tf_estrutural;
-   double high[], low[];
-   datetime time[];
-   ArraySetAsSeries(high, true);
-   ArraySetAsSeries(low, true);
-   ArraySetAsSeries(time, true);
-   
-   if(CopyHigh(_Symbol, tf, 0, m_tsp_pivot_lookback, high) <= 0) return;
-   if(CopyLow(_Symbol, tf, 0, m_tsp_pivot_lookback, low) <= 0) return;
-   if(CopyTime(_Symbol, tf, 0, m_tsp_pivot_lookback, time) <= 0) return;
-   
-   int fb = m_tsp_fractal_bars;
-   
-   _tsp_pivot_str_count = 0;
-   
-   for(int i = fb; i < m_tsp_pivot_lookback - fb; i++) {
-      bool is_high = true;
-      bool is_low = true;
-      
-      for(int j = 1; j <= fb; j++) {
-         if(high[i] <= high[i-j] || high[i] <= high[i+j]) is_high = false;
-         if(low[i] >= low[i-j] || low[i] >= low[i+j]) is_low = false;
-      }
-      
-      if(is_high || is_low) {
-         if(_tsp_pivot_str_count < m_tsp_pivot_count) {
-            _tsp_pivots_str[_tsp_pivot_str_count].time = time[i];
-            _tsp_pivots_str[_tsp_pivot_str_count].price = is_high ? high[i] : low[i];
-            _tsp_pivots_str[_tsp_pivot_str_count].type = is_high ? 1 : -1;
-            _tsp_pivot_str_count++;
-         }
-      }
-   }
-}
-
-
-// Stubs para funcoes futuras compilar
-bool EXECUCAO::tsp_em_zona_compra(void) {
-   if(_tsp_context.trend_estrutural != 1) return false;
-   
-   double dist = _tsp_context.str_last_high - _tsp_context.str_last_low;
-   if(dist <= 0) return false;
-   
-   double fib_sup = _tsp_context.str_last_high - (dist * (m_tsp_fibo_sup / 100.0));
-   double fib_inf = _tsp_context.str_last_high - (dist * (m_tsp_fibo_inf / 100.0));
-   
-   double tolerance = m_tsp_zona_tol * _Point;
-   fib_sup += tolerance;
-   fib_inf -= tolerance;
-   
-   double price = SymbolInfoDouble(_Symbol, SYMBOL_BID);
-   
-   return (price <= fib_sup && price >= fib_inf);
-}
-bool EXECUCAO::tsp_em_zona_venda(void) {
-   if(_tsp_context.trend_estrutural != -1) return false;
-   
-   double dist = _tsp_context.str_last_high - _tsp_context.str_last_low;
-   if(dist <= 0) return false;
-   
-   double fib_sup = _tsp_context.str_last_low + (dist * (m_tsp_fibo_sup / 100.0));
-   double fib_inf = _tsp_context.str_last_low + (dist * (m_tsp_fibo_inf / 100.0));
-   
-   double tolerance = m_tsp_zona_tol * _Point;
-   fib_sup -= tolerance; // Ask grows down in price chart logic? No, ask is price. Tolerance expands the zone.
-   fib_inf += tolerance;
-   
-   double price = SymbolInfoDouble(_Symbol, SYMBOL_ASK);
-   
-   return (price >= fib_sup && price <= fib_inf);
-}
-bool EXECUCAO::tsp_falha_compra(void) {
-   return (_tsp_context.trend_confirm == 1);
-}
-
-bool EXECUCAO::tsp_falha_venda(void) {
-   return (_tsp_context.trend_confirm == -1);
-}
-
-int EXECUCAO::tsp_calcular_score_compra(void) {
-   int score = 0;
-   
-   if(_tsp_context.trend_macro == 1) score += m_tsp_w_macro;
-   if(_tsp_context.trend_dominante == 1) score += m_tsp_w_dominante;
-   else if(_tsp_context.trend_dominante == -1) score += m_tsp_penalidade;
-   
-   if(_tsp_context.trend_estrutural == 1) score += m_tsp_w_estrut;
-   if(_tsp_context.trend_setup == 1) score += m_tsp_w_setup;
-   
-   if(tsp_falha_compra()) score += m_tsp_w_falha;
-   
-   if(m_tsp_usar_adx && tsp_adx_favoravel()) score += m_tsp_w_adx;
-   if(m_tsp_usar_hilo && tsp_hilo_alta()) score += m_tsp_w_hilo;
-   
-   return score;
-}
-
-int EXECUCAO::tsp_calcular_score_venda(void) {
-   int score = 0;
-   
-   if(_tsp_context.trend_macro == -1) score += m_tsp_w_macro;
-   if(_tsp_context.trend_dominante == -1) score += m_tsp_w_dominante;
-   else if(_tsp_context.trend_dominante == 1) score += m_tsp_penalidade;
-   
-   if(_tsp_context.trend_estrutural == -1) score += m_tsp_w_estrut;
-   if(_tsp_context.trend_setup == -1) score += m_tsp_w_setup;
-   
-   if(tsp_falha_venda()) score += m_tsp_w_falha;
-   
-   if(m_tsp_usar_adx && tsp_adx_favoravel()) score += m_tsp_w_adx;
-   if(m_tsp_usar_hilo && tsp_hilo_baixa()) score += m_tsp_w_hilo;
-   
-   return score;
-}
-
-bool EXECUCAO::tsp_adx_favoravel(void) {
-   if(!m_tsp_usar_adx) return false;
-   double adx = 0;
-   if(!get_indicator_value(_handle_5, 0, 1, adx)) return false;
-   return (adx >= m_tsp_adx_min);
-}
-
-bool EXECUCAO::tsp_hilo_alta(void) {
-   if(!m_tsp_usar_hilo) return false;
-   double hilo = 0;
-   if(!get_indicator_value(_handle_4, 0, 1, hilo)) return false;
-   double close[];
-   if(CopyClose(_Symbol, _Period, 1, 1, close) <= 0) return false;
-   return (close[0] > hilo);
-}
-
-bool EXECUCAO::tsp_hilo_baixa(void) {
-   if(!m_tsp_usar_hilo) return false;
-   double hilo = 0;
-   if(!get_indicator_value(_handle_4, 0, 1, hilo)) return false;
-   double close[];
-   if(CopyClose(_Symbol, _Period, 1, 1, close) <= 0) return false;
-   return (close[0] < hilo);
-}
-
-
-void EXECUCAO::tsp_draw_reference_lines(void) {
-   datetime t2 = TimeCurrent() + PeriodSeconds()*50;
-   
-   if(m_tsp_draw_lines_mac) {
-       string m_high = "TSP_MACRO_HIGH";
-       string m_low = "TSP_MACRO_LOW";
-       if(_tsp_context.macro_time_high > 0 && _tsp_context.macro_last_high > 0) {
-           if(ObjectFind(0, m_high) < 0) ObjectCreate(0, m_high, OBJ_TREND, 0, _tsp_context.macro_time_high, _tsp_context.macro_last_high, t2, _tsp_context.macro_last_high);
-           else { ObjectSetInteger(0, m_high, OBJPROP_TIME, 0, _tsp_context.macro_time_high); ObjectSetDouble(0, m_high, OBJPROP_PRICE, 0, _tsp_context.macro_last_high);
-                  ObjectSetInteger(0, m_high, OBJPROP_TIME, 1, t2); ObjectSetDouble(0, m_high, OBJPROP_PRICE, 1, _tsp_context.macro_last_high); }
-           ObjectSetInteger(0, m_high, OBJPROP_COLOR, clrDarkRed); ObjectSetInteger(0, m_high, OBJPROP_STYLE, STYLE_DASH);
-           ObjectSetInteger(0, m_high, OBJPROP_WIDTH, 2); ObjectSetInteger(0, m_high, OBJPROP_RAY_RIGHT, true); ObjectSetInteger(0, m_high, OBJPROP_BACK, true);
-       }
-       if(_tsp_context.macro_time_low > 0 && _tsp_context.macro_last_low > 0) {
-           if(ObjectFind(0, m_low) < 0) ObjectCreate(0, m_low, OBJ_TREND, 0, _tsp_context.macro_time_low, _tsp_context.macro_last_low, t2, _tsp_context.macro_last_low);
-           else { ObjectSetInteger(0, m_low, OBJPROP_TIME, 0, _tsp_context.macro_time_low); ObjectSetDouble(0, m_low, OBJPROP_PRICE, 0, _tsp_context.macro_last_low);
-                  ObjectSetInteger(0, m_low, OBJPROP_TIME, 1, t2); ObjectSetDouble(0, m_low, OBJPROP_PRICE, 1, _tsp_context.macro_last_low); }
-           ObjectSetInteger(0, m_low, OBJPROP_COLOR, clrDarkBlue); ObjectSetInteger(0, m_low, OBJPROP_STYLE, STYLE_DASH);
-           ObjectSetInteger(0, m_low, OBJPROP_WIDTH, 2); ObjectSetInteger(0, m_low, OBJPROP_RAY_RIGHT, true); ObjectSetInteger(0, m_low, OBJPROP_BACK, true);
-       }
-   }
-   
-   if(m_tsp_draw_lines_dom) {
-       string d_high = "TSP_DOM_HIGH";
-       string d_low = "TSP_DOM_LOW";
-       if(_tsp_context.dom_time_high > 0 && _tsp_context.dom_last_high > 0) {
-           if(ObjectFind(0, d_high) < 0) ObjectCreate(0, d_high, OBJ_TREND, 0, _tsp_context.dom_time_high, _tsp_context.dom_last_high, t2, _tsp_context.dom_last_high);
-           else { ObjectSetInteger(0, d_high, OBJPROP_TIME, 0, _tsp_context.dom_time_high); ObjectSetDouble(0, d_high, OBJPROP_PRICE, 0, _tsp_context.dom_last_high);
-                  ObjectSetInteger(0, d_high, OBJPROP_TIME, 1, t2); ObjectSetDouble(0, d_high, OBJPROP_PRICE, 1, _tsp_context.dom_last_high); }
-           ObjectSetInteger(0, d_high, OBJPROP_COLOR, clrIndianRed); ObjectSetInteger(0, d_high, OBJPROP_STYLE, STYLE_DOT);
-           ObjectSetInteger(0, d_high, OBJPROP_WIDTH, 1); ObjectSetInteger(0, d_high, OBJPROP_RAY_RIGHT, true); ObjectSetInteger(0, d_high, OBJPROP_BACK, true);
-       }
-       if(_tsp_context.dom_time_low > 0 && _tsp_context.dom_last_low > 0) {
-           if(ObjectFind(0, d_low) < 0) ObjectCreate(0, d_low, OBJ_TREND, 0, _tsp_context.dom_time_low, _tsp_context.dom_last_low, t2, _tsp_context.dom_last_low);
-           else { ObjectSetInteger(0, d_low, OBJPROP_TIME, 0, _tsp_context.dom_time_low); ObjectSetDouble(0, d_low, OBJPROP_PRICE, 0, _tsp_context.dom_last_low);
-                  ObjectSetInteger(0, d_low, OBJPROP_TIME, 1, t2); ObjectSetDouble(0, d_low, OBJPROP_PRICE, 1, _tsp_context.dom_last_low); }
-           ObjectSetInteger(0, d_low, OBJPROP_COLOR, clrCornflowerBlue); ObjectSetInteger(0, d_low, OBJPROP_STYLE, STYLE_DOT);
-           ObjectSetInteger(0, d_low, OBJPROP_WIDTH, 1); ObjectSetInteger(0, d_low, OBJPROP_RAY_RIGHT, true); ObjectSetInteger(0, d_low, OBJPROP_BACK, true);
-       }
-   }
-   
-   if(m_tsp_draw_lines_str) {
-       string s_high = "TSP_STR_HIGH";
-       string s_low = "TSP_STR_LOW";
-       if(_tsp_context.str_time_high > 0 && _tsp_context.str_last_high > 0) {
-           if(ObjectFind(0, s_high) < 0) ObjectCreate(0, s_high, OBJ_TREND, 0, _tsp_context.str_time_high, _tsp_context.str_last_high, t2, _tsp_context.str_last_high);
-           else { ObjectSetInteger(0, s_high, OBJPROP_TIME, 0, _tsp_context.str_time_high); ObjectSetDouble(0, s_high, OBJPROP_PRICE, 0, _tsp_context.str_last_high);
-                  ObjectSetInteger(0, s_high, OBJPROP_TIME, 1, t2); ObjectSetDouble(0, s_high, OBJPROP_PRICE, 1, _tsp_context.str_last_high); }
-           ObjectSetInteger(0, s_high, OBJPROP_COLOR, clrGold); ObjectSetInteger(0, s_high, OBJPROP_STYLE, STYLE_DASHDOT);
-           ObjectSetInteger(0, s_high, OBJPROP_WIDTH, 1); ObjectSetInteger(0, s_high, OBJPROP_RAY_RIGHT, true); ObjectSetInteger(0, s_high, OBJPROP_BACK, true);
-       }
-       if(_tsp_context.str_time_low > 0 && _tsp_context.str_last_low > 0) {
-           if(ObjectFind(0, s_low) < 0) ObjectCreate(0, s_low, OBJ_TREND, 0, _tsp_context.str_time_low, _tsp_context.str_last_low, t2, _tsp_context.str_last_low);
-           else { ObjectSetInteger(0, s_low, OBJPROP_TIME, 0, _tsp_context.str_time_low); ObjectSetDouble(0, s_low, OBJPROP_PRICE, 0, _tsp_context.str_last_low);
-                  ObjectSetInteger(0, s_low, OBJPROP_TIME, 1, t2); ObjectSetDouble(0, s_low, OBJPROP_PRICE, 1, _tsp_context.str_last_low); }
-           ObjectSetInteger(0, s_low, OBJPROP_COLOR, clrGold); ObjectSetInteger(0, s_low, OBJPROP_STYLE, STYLE_DASHDOT);
-           ObjectSetInteger(0, s_low, OBJPROP_WIDTH, 1); ObjectSetInteger(0, s_low, OBJPROP_RAY_RIGHT, true); ObjectSetInteger(0, s_low, OBJPROP_BACK, true);
-       }
-   }
-}
-
-void EXECUCAO::tsp_draw_pivots(void) {
-   if(!m_tsp_draw_pivots || _tsp_pivot_str_count < 2) return;
-   
-   for(int i = 0; i < _tsp_pivot_str_count - 1; i++) {
-      string name = "TSP_PIVOT_" + IntegerToString(i);
-      if(ObjectFind(0, name) < 0) {
-         ObjectCreate(0, name, OBJ_TREND, 0, _tsp_pivots_str[i].time, _tsp_pivots_str[i].price, _tsp_pivots_str[i+1].time, _tsp_pivots_str[i+1].price);
-      } else {
-         ObjectSetInteger(0, name, OBJPROP_TIME, 0, _tsp_pivots_str[i].time);
-         ObjectSetDouble(0, name, OBJPROP_PRICE, 0, _tsp_pivots_str[i].price);
-         ObjectSetInteger(0, name, OBJPROP_TIME, 1, _tsp_pivots_str[i+1].time);
-         ObjectSetDouble(0, name, OBJPROP_PRICE, 1, _tsp_pivots_str[i+1].price);
-      }
-      ObjectSetInteger(0, name, OBJPROP_COLOR, m_tsp_cor_pivot);
-      ObjectSetInteger(0, name, OBJPROP_WIDTH, 2);
-      ObjectSetInteger(0, name, OBJPROP_RAY_RIGHT, false);
-   }
-}
-
-void EXECUCAO::tsp_draw_zones(void) {
-   if(!m_tsp_draw_zones) return;
-   if(_tsp_context.trend_estrutural == 0) return;
-   
-   double dist = _tsp_context.str_last_high - _tsp_context.str_last_low;
-   if(dist <= 0) return;
-   
-   double fib_sup = 0, fib_inf = 0;
-   color cor = clrNONE;
-   
-   if(_tsp_context.trend_estrutural == 1) {
-      fib_sup = _tsp_context.str_last_high - (dist * (m_tsp_fibo_sup / 100.0));
-      fib_inf = _tsp_context.str_last_high - (dist * (m_tsp_fibo_inf / 100.0));
-      cor = m_tsp_cor_alta;
-   } else {
-      fib_sup = _tsp_context.str_last_low + (dist * (m_tsp_fibo_sup / 100.0));
-      fib_inf = _tsp_context.str_last_low + (dist * (m_tsp_fibo_inf / 100.0));
-      cor = m_tsp_cor_baixa;
-   }
-   
-   double tolerance = m_tsp_zona_tol * _Point;
-   if(_tsp_context.trend_estrutural == 1) {
-       fib_sup += tolerance;
-       fib_inf -= tolerance;
-   } else {
-       fib_sup -= tolerance;
-       fib_inf += tolerance;
-   }
-   
-   datetime t1 = _tsp_pivots_str[0].time; 
-   datetime t2 = TimeCurrent() + PeriodSeconds(_Period) * 10;
-   
-   string name = "TSP_ZONE";
-   if(ObjectFind(0, name) < 0) {
-      ObjectCreate(0, name, OBJ_RECTANGLE, 0, t1, fib_sup, t2, fib_inf);
-   } else {
-      ObjectSetInteger(0, name, OBJPROP_TIME, 0, t1);
-      ObjectSetDouble(0, name, OBJPROP_PRICE, 0, fib_sup);
-      ObjectSetInteger(0, name, OBJPROP_TIME, 1, t2);
-      ObjectSetDouble(0, name, OBJPROP_PRICE, 1, fib_inf);
-   }
-   ObjectSetInteger(0, name, OBJPROP_COLOR, cor);
-   ObjectSetInteger(0, name, OBJPROP_BACK, true);
-   ObjectSetInteger(0, name, OBJPROP_FILL, true);
-}
-
-void EXECUCAO::tsp_log_estrutural(void) {
-   static datetime last_log = 0;
-   if(TimeCurrent() - last_log < 60) return; // Log 1x por minuto
-   
-   if(!m_tsp_show_score) return;
-   
-   string t_str = _tsp_context.trend_estrutural == 1 ? "ALTA" : (_tsp_context.trend_estrutural == -1 ? "BAIXA" : "LATERAL");
-   int score_c = tsp_calcular_score_compra();
-   int score_v = tsp_calcular_score_venda();
-   
-      string exp_str = (_expiracao > 0) ? TimeToString(_expiracao, TIME_DATE) : "Vitalícia";
-   string msg = StringFormat("[TSP] %s | %s | SC: %d | SV: %d | Expira: %s", g_set_name_display, t_str, score_c, score_v, exp_str);
-   update_painel_descritivo(msg);
-   
-   last_log = TimeCurrent();
-}
-int EXECUCAO::tsp_get_trend(ENUM_TIMEFRAMES tf, double &last_high, double &last_low, datetime &last_high_time, datetime &last_low_time) {
-   double high[], low[];
-   datetime time[];
-   ArraySetAsSeries(high, true);
-   ArraySetAsSeries(low, true);
-   ArraySetAsSeries(time, true);
-   
-   if(CopyHigh(_Symbol, tf, 0, m_tsp_pivot_lookback, high) <= 0) return 0;
-   if(CopyLow(_Symbol, tf, 0, m_tsp_pivot_lookback, low) <= 0) return 0;
-   if(CopyTime(_Symbol, tf, 0, m_tsp_pivot_lookback, time) <= 0) return 0;
-   
-   int fb = m_tsp_fractal_bars;
-   
-   double t1 = 0, t2 = 0; 
-   datetime dt1 = 0;
-   double f1 = 0, f2 = 0; 
-   datetime df1 = 0;
-   int found_t = 0, found_f = 0;
-   
-   for(int i = fb; i < m_tsp_pivot_lookback - fb; i++) {
-      bool is_high = true;
-      bool is_low = true;
-      
-      for(int j = 1; j <= fb; j++) {
-         if(high[i] <= high[i-j] || high[i] <= high[i+j]) is_high = false;
-         if(low[i] >= low[i-j] || low[i] >= low[i+j]) is_low = false;
-      }
-      
-      if(is_high && found_t < 2) {
-         if(found_t == 0) { t1 = high[i]; dt1 = time[i]; }
-         if(found_t == 1) t2 = high[i];
-         found_t++;
-      }
-      
-      if(is_low && found_f < 2) {
-         if(found_f == 0) { f1 = low[i]; df1 = time[i]; }
-         if(found_f == 1) f2 = low[i];
-         found_f++;
-      }
-      
-      if(found_t == 2 && found_f == 2) break;
-   }
-   
-   if(found_t > 0) { last_high = t1; last_high_time = dt1; }
-   if(found_f > 0) { last_low = f1; last_low_time = df1; }
-   
-   if(found_t == 2 && found_f == 2) {
-      if(t1 > t2 && f1 > f2) return 1;
-      if(t1 < t2 && f1 < f2) return -1;
-   }
-   return 0;
-}
