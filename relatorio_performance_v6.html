@@ -342,37 +342,54 @@
         </div>
 
         <!-- GESTÃO DE RISCO E CAPITAL SUGERIDO -->
-        <h2 class="section-title" style="margin-top: 4rem;"><i class="fa-solid fa-vault"></i> Gestão de Risco Institucional: A Regra dos 5x</h2>
+        <h2 class="section-title" style="margin-top: 4rem;"><i class="fa-solid fa-bomb"></i> Stress Test: Calculadora de Pior Cenário</h2>
         
         <div class="dashboard-grid">
             <div class="card" style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.9)); border-left: 4px solid var(--primary);">
-                <h3 style="color: var(--primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fa-solid fa-calculator"></i> Cálculo de Margem Segura</h3>
-                <p style="color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.6;">O segredo da sobrevivência no Daytrade não é prever o lucro, mas sim <strong>ancorar o risco</strong>. Utilizamos a regra de alocação institucional de pelo menos 5x o Drawdown Máximo Histórico para definir o capital mínimo sugerido da conta.</p>
+                <h3 style="color: var(--primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fa-solid fa-calculator"></i> Cálculo Realista de Margem</h3>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.6;">O Drawdown histórico pode ser "bonzinho". Um gestor profissional calcula o <strong>Pior Cenário Matemático Possível</strong> (se o robô abrir todos os aumentos de posição e tomar o Stop Máximo cheio).</p>
                 
                 <div style="background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 1rem; border: 1px dashed rgba(255,255,255,0.1);">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.8rem; font-size: 1.1rem;">
-                        <span style="color: var(--text-muted);">Drawdown Máximo Histórico:</span>
-                        <span style="color: var(--danger); font-weight: bold;">R$ 715</span>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.8rem; font-size: 0.95rem; align-items: center;">
+                        <span style="color: var(--text-muted);">Total de Contratos (Base + Aumentos):</span>
+                        <input type="number" id="calcLots" value="5" style="width: 80px; background: rgba(255,255,255,0.1); border: 1px solid var(--primary); color: white; border-radius: 4px; padding: 4px 8px; text-align: right; font-family: 'Inter';" oninput="calculateStress()">
                     </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.8rem; font-size: 1.1rem;">
-                        <span style="color: var(--text-muted);">Multiplicador de Proteção:</span>
-                        <span style="color: var(--text-main); font-weight: bold;">x 5</span>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.8rem; font-size: 0.95rem; align-items: center;">
+                        <span style="color: var(--text-muted);">Distância do Stop Máximo (Pontos):</span>
+                        <input type="number" id="calcStop" value="500" style="width: 80px; background: rgba(255,255,255,0.1); border: 1px solid var(--primary); color: white; border-radius: 4px; padding: 4px 8px; text-align: right; font-family: 'Inter';" oninput="calculateStress()">
                     </div>
-                    <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 1rem 0;">
-                    <div style="display: flex; justify-content: space-between; font-size: 1.3rem;">
-                        <span style="color: var(--text-main); font-weight: bold;">Capital Ideal em Conta:</span>
-                        <span style="color: var(--primary); font-weight: 800;">R$ 3.575</span>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.8rem; font-size: 0.95rem; align-items: center;">
+                        <span style="color: var(--text-muted);">Loss Máximo Matemático (WIN):</span>
+                        <span id="resLoss" style="color: var(--danger); font-weight: bold;">R$ 500,00</span>
+                    </div>
+                    
+                    <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 1.2rem 0;">
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <span style="color: var(--text-muted); font-size: 0.95rem;">Multiplicador de Sobrevivência:</span>
+                        <select id="calcMult" style="background: rgba(255,255,255,0.1); border: 1px solid var(--primary); color: white; border-radius: 4px; padding: 4px; text-align: right; font-family: 'Inter';" onchange="calculateStress()">
+                            <option value="3">3x (Perfil Agressivo)</option>
+                            <option value="5" selected>5x (Perfil Institucional)</option>
+                        </select>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; font-size: 1.3rem; margin-top: 1.2rem;">
+                        <span style="color: var(--text-main); font-weight: bold;">Capital Sugerido na Conta:</span>
+                        <span id="resCapital" style="color: var(--primary); font-weight: 800;">R$ 2.500,00</span>
                     </div>
                 </div>
             </div>
 
             <div class="card" style="display: flex; flex-direction: column; justify-content: center;">
                 <div class="info-panel" style="margin-top: 0; border-left-color: var(--secondary);">
-                    <h4 style="color: var(--secondary);"><i class="fa-solid fa-book-open-reader"></i> Entendendo a Matemática</h4>
+                    <h4 style="color: var(--secondary);"><i class="fa-solid fa-book-open-reader"></i> Entendendo a Matemática do Stress Test</h4>
                     <ul style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; padding-left: 1.2rem; margin-top: 1rem;">
-                        <li><strong style="color: var(--text-main);">Drawdown:</strong> É o maior sufoco financeiro que o robô passou no pior momento histórico. Determina o tamanho da "blindagem" necessária.</li>
-                        <li><strong style="color: var(--text-main);">Por que multiplicar por 5?</strong> A regra dos 5x garante que, mesmo que o mercado sofra uma quebra sistêmica e repita o <strong>pior cenário da história 4 vezes seguidas</strong> logo após você ligar o robô, sua conta ainda sobreviverá (ficará com saldo) para esperar a recuperação.</li>
-                        <li><strong style="color: var(--text-main);">E o Fator de Recuperação?</strong> Com o fator atual em 2.9, significa que a estratégia gerou quase R$ 3 de lucro para cada R$ 1 que precisou arriscar no Drawdown.</li>
+                        <li><strong style="color: var(--text-main);">Por que calcular assim?</strong> O Drawdown do backtest é o que aconteceu. O Stress Test é o que <strong>PODE</strong> acontecer se tudo der errado numa mesma operação (Acionar preço médio máximo e tomar Stop Full).</li>
+                        <li><strong style="color: var(--text-main);">O Multiplicador (3x ou 5x):</strong> Garante que, mesmo que ocorra uma "cisne negro" e o mercado puxe o pior cenário 3 ou 5 vezes consecutivas, a conta não zera.</li>
+                        <li><strong style="color: var(--text-main);">Interatividade:</strong> Altere os valores de Contratos e Pontos ao lado para simular perfeitamente o <strong>seu arquivo .set atual</strong>.</li>
                     </ul>
                 </div>
             </div>
@@ -495,6 +512,24 @@
                     }
                 }
             }
+        });
+
+        // Script Calculadora Stress Test
+        function calculateStress() {
+            let lots = parseFloat(document.getElementById('calcLots').value) || 0;
+            let stop = parseFloat(document.getElementById('calcStop').value) || 0;
+            let mult = parseFloat(document.getElementById('calcMult').value) || 5;
+            
+            // Calculo especifico pro mini-indice (WIN): R$ 0,20 por ponto
+            let lossFinanceiro = lots * stop * 0.20;
+            let capital = lossFinanceiro * mult;
+            
+            document.getElementById('resLoss').innerText = 'R$ ' + lossFinanceiro.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('resCapital').innerText = 'R$ ' + capital.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            calculateStress();
         });
     </script>
 </body>
