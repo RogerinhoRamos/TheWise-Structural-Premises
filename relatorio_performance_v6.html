@@ -362,12 +362,12 @@
                     
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.8rem; font-size: 0.95rem; align-items: center;">
                         <span style="color: var(--text-muted);">Distância do Stop Máximo (Pontos):</span>
-                        <input type="number" id="calcStop" value="500" style="width: 80px; background: rgba(255,255,255,0.1); border: 1px solid var(--primary); color: white; border-radius: 4px; padding: 4px 8px; text-align: right; font-family: 'Inter';" oninput="calculateStress()">
+                        <input type="number" id="calcStop" value="5000" style="width: 80px; background: rgba(255,255,255,0.1); border: 1px solid var(--primary); color: white; border-radius: 4px; padding: 4px 8px; text-align: right; font-family: 'Inter';" oninput="calculateStress()">
                     </div>
                     
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.8rem; font-size: 0.95rem; align-items: center;">
                         <span style="color: var(--text-muted);">Loss Máximo Matemático (WIN):</span>
-                        <span id="resLoss" style="color: var(--danger); font-weight: bold;">R$ 500,00</span>
+                        <span id="resLoss" style="color: var(--danger); font-weight: bold;">R$ 5.000,00</span>
                     </div>
                     
                     <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 1.2rem 0;">
@@ -375,8 +375,8 @@
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
                         <span style="color: var(--text-muted); font-size: 0.95rem;">Multiplicador de Sobrevivência:</span>
                         <select id="calcMult" style="background: rgba(255,255,255,0.1); border: 1px solid var(--primary); color: white; border-radius: 4px; padding: 4px; text-align: right; font-family: 'Inter';" onchange="calculateStress()">
-                            <option value="3" style="background: #0f172a; color: white;">3x (Perfil Agressivo)</option>
-                            <option value="5" selected style="background: #0f172a; color: white;">5x (Perfil Institucional)</option>
+                            <option value="3" selected style="background: #0f172a; color: white;">3x (Perfil Agressivo)</option>
+                            <option value="5" style="background: #0f172a; color: white;">5x (Perfil Institucional)</option>
                         </select>
                     </div>
                     
