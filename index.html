@@ -367,6 +367,29 @@
             100% { transform: translateY(0); opacity: 1; }
         }
 
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.6); transform: scale(1); }
+            50% { box-shadow: 0 0 25px 15px rgba(245, 158, 11, 0); transform: scale(1.05); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); transform: scale(1); }
+        }
+
+        .btn-pulse {
+            animation: pulse-glow 2.5s infinite;
+            border: 2px solid #fff;
+            background: linear-gradient(135deg, var(--primary) 0%, #d97706 100%);
+            color: #000 !important;
+            font-size: 1.1rem;
+            padding: 1.2rem 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 20px var(--primary-glow);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px) scale(1.02);
+            filter: brightness(1.1);
+        }
+
         @media (max-width: 768px) {
             .showcase-container { gap: 2rem; }
             .contact-box { padding: 2rem; }
@@ -509,8 +532,8 @@
                         <p style="font-size: 0.85rem; color: var(--text-muted);">Índice Sharpe</p>
                     </div>
                 </div>
-                <a href="relatorio_performance_v6.html" target="_blank" class="btn btn-primary" style="margin-top: 2.5rem;">
-                    <i class="fa-solid fa-chart-pie"></i> Ver Dashboard Interativo Completo
+                <a href="relatorio_performance_v6.html" target="_blank" class="btn btn-pulse" style="margin-top: 3.5rem; width: 100%; justify-content: center;">
+                    <i class="fa-solid fa-chart-pie" style="font-size: 1.4rem;"></i> ACESSAR DASHBOARD DE AUDITORIA
                 </a>
             </div>
             <div class="showcase-image" style="border-color: var(--primary); display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.5); padding: 4rem; flex-direction: column;">
@@ -539,11 +562,21 @@
     <section class="contact" id="manual">
         <div class="contact-box">
             <h2>A Máquina está pronta para a guerra.</h2>
-            <p style="margin-bottom: 2rem; color: var(--text-muted);">Pare de brincar com setups engessados. Assuma o controle institucional com TheWise V6.</p>
-            <div class="cta-group">
-                <a href="https://wa.me/5511999056897" target="_blank" class="btn btn-primary">Falar no WhatsApp</a>
-                <a href="manual_operacional_tsp.html" class="btn btn-outline">Consultar o Glossário V6</a>
+            <p style="margin-bottom: 3rem; color: var(--text-muted); font-size: 1.1rem;">Pare de brincar com setups engessados. Valide na sua própria conta a resiliência do <strong>TheWise V6</strong>. Solicite agora sua licença de testes com nosso suporte direto.</p>
+            
+            <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
+                <a href="https://wa.me/5511999056897?text=Ol%C3%A1%2C%20gostaria%20de%20solicitar%20uma%20licen%C3%A7a%20de%20testes%20para%20o%20rob%C3%B4%20TheWise%20V6!" target="_blank" class="btn cta-button" style="background: #25D366; color: #fff; padding: 1.2rem 2.5rem; border-radius: 50px; text-decoration: none; font-weight: 800; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);">
+                    <i class="fa-brands fa-whatsapp" style="font-size: 1.5rem;"></i> Testar via WhatsApp
+                </a>
+                
+                <a href="https://t.me/Rogerinho_Ramos" target="_blank" class="btn cta-button" style="background: #0088cc; color: #fff; padding: 1.2rem 2.5rem; border-radius: 50px; text-decoration: none; font-weight: 800; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(0, 136, 204, 0.2);">
+                    <i class="fa-brands fa-telegram" style="font-size: 1.5rem;"></i> Testar via Telegram
+                </a>
             </div>
+            
+            <a href="manual_operacional_tsp.html" class="btn btn-outline" style="margin-top: 3rem;">
+                <i class="fa-solid fa-book-open"></i> Consultar o Glossário V6
+            </a>
         </div>
     </section>
 
